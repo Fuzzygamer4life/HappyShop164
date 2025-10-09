@@ -1,9 +1,13 @@
 package ci553.happyshop.client.customer;
 
+import ci553.happyshop.catalogue.Product;
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -75,47 +79,84 @@ public class CustomerView  {
         viewWindow=window;// Sets viewWindow to this window for future reference and management.
     }
 
+    ListView<Product> obrLvProducts; //A ListView observes the product list
+    private ObservableList<Product> obeProductList; //observable product list (To hold products)
+    private Label laSearchSummary; //displays text based on wether a product has been found
     private VBox createSearchPage() {
+        //todo remove some of the old page to make more similar to the warehouses search menu
         Label laPageTitle = new Label("Search by Product ID/Name");
         laPageTitle.setStyle(UIStyle.labelTitleStyle);
 
-        Label laId = new Label("ID:      ");
-        laId.setStyle(UIStyle.labelStyle);
         tfId = new TextField();
-        tfId.setPromptText("eg. 0001");
+        tfId.setPromptText("Enter ID/Name");
         tfId.setStyle(UIStyle.textFiledStyle);
-        HBox hbId = new HBox(10, laId, tfId);
 
-        Label laName = new Label("Name:");
-        laName.setStyle(UIStyle.labelStyle);
-        tfName = new TextField();
-        tfName.setPromptText("implement it if you want");
-        tfName.setStyle(UIStyle.textFiledStyle);
-        HBox hbName = new HBox(10, laName, tfName);
-
-        Label laPlaceHolder = new Label(  " ".repeat(15)); //create left-side spacing so that this HBox aligns with others in the layout.
-        Button btnSearch = new Button("Search");
+        Button btnSearch = new Button("🔍");
+        //btnSearch.setOnAction(this::buttonClick); this is where you would link the butto nto an action?
         btnSearch.setStyle(UIStyle.buttonStyle);
-        btnSearch.setOnAction(this::buttonClicked);
-        Button btnAddToTrolley = new Button("Add to Trolley");
-        btnAddToTrolley.setStyle(UIStyle.buttonStyle);
-        btnAddToTrolley.setOnAction(this::buttonClicked);
-        HBox hbBtns = new HBox(10, laPlaceHolder,btnSearch, btnAddToTrolley);
 
-        ivProduct = new ImageView("imageHolder.jpg");
-        ivProduct.setFitHeight(60);
-        ivProduct.setFitWidth(60);
-        ivProduct.setPreserveRatio(true); // Image keeps its original shape and fits inside 60×60
-        ivProduct.setSmooth(true); //make it smooth and nice-looking
+        HBox hbId = new HBox(10, tfId, btnSearch);
 
-        lbProductInfo = new Label("Thank you for shopping with us.");
-        lbProductInfo.setWrapText(true);
-        lbProductInfo.setMinHeight(Label.USE_PREF_SIZE);  // Allow auto-resize
-        lbProductInfo.setStyle(UIStyle.labelMulLineStyle);
-        HBox hbSearchResult = new HBox(5, ivProduct, lbProductInfo);
-        hbSearchResult.setAlignment(Pos.CENTER_LEFT);
+        //this is some of the buttons that will be used to add and remove products
+        laSearchSummary = new Label("Search Summary");
+        laSearchSummary.setStyle(UIStyle.labelStyle);
+        Button btnEdit = new Button("Add");
+        btnEdit.setStyle(UIStyle.greenFillBtnStyle);
+        //btnEdit.setOnAction(this::buttonClick);
 
-        VBox vbSearchPage = new VBox(15, laPageTitle, hbId, hbName, hbBtns, hbSearchResult);
+        Button btnDelete = new Button("Remove");
+        btnDelete.setStyle(UIStyle.grayFillBtnStyle);
+        //btnDelete.setOnAction(this::buttonClick);
+
+        HBox hbLaBtns = new HBox(10, laSearchSummary, btnEdit,btnDelete);
+        hbLaBtns.setAlignment(Pos.CENTER);
+        hbLaBtns.setPadding(new Insets(5)); //setPadding only works on Layout manager
+
+        obeProductList = FXCollections.observableArrayList();
+        obrLvProducts = new ListView<>(obeProductList);//ListView proListView observes proList
+        //obrLvProducts.setPrefHeight(HEIGHT - 100);
+        obrLvProducts.setFixedCellSize(50);
+        obrLvProducts.setStyle(UIStyle.listViewStyle);
+
+        VBox vbSearchResult = new VBox(5,hbLaBtns, obrLvProducts);
+
+
+        /* this is a snipped from warehouse
+                Button btnSearch = new Button("🔍");
+        //Button btnSearch = new Button("\uD83D\uDD0D"); // Unicode for 🔍
+        btnSearch.setOnAction(this::buttonClick);
+        btnSearch.setStyle(UIStyle.buttonStyle);
+        HBox hbSearch = new HBox(10, tfSearchKeyword, btnSearch);
+         */
+
+
+//        Label laName = new Label("Name:");
+//        laName.setStyle(UIStyle.labelStyle);
+//        tfName = new TextField();
+//        tfName.setPromptText("implement it if you want");
+//        tfName.setStyle(UIStyle.textFiledStyle);
+//        HBox hbName = new HBox(10, laName, tfName);
+
+//        Label laPlaceHolder = new Label(  " ".repeat(15)); //create left-side spacing so that this HBox aligns with others in the layout.
+//        Button btnAddToTrolley = new Button("Add to Trolley");
+//        btnAddToTrolley.setStyle(UIStyle.buttonStyle);
+//        btnAddToTrolley.setOnAction(this::buttonClicked);
+//        HBox hbBtns = new HBox(10, laPlaceHolder, btnAddToTrolley);
+
+//        ivProduct = new ImageView("imageHolder.jpg");
+//        ivProduct.setFitHeight(60);
+//        ivProduct.setFitWidth(60);
+//        ivProduct.setPreserveRatio(true); // Image keeps its original shape and fits inside 60×60
+//        ivProduct.setSmooth(true); //make it smooth and nice-looking
+//
+//        lbProductInfo = new Label("Thank you for shopping with us.");
+//        lbProductInfo.setWrapText(true);
+//        lbProductInfo.setMinHeight(Label.USE_PREF_SIZE);  // Allow auto-resize
+//        lbProductInfo.setStyle(UIStyle.labelMulLineStyle);
+//        HBox hbSearchResult = new HBox(5, ivProduct, lbProductInfo);
+//        hbSearchResult.setAlignment(Pos.CENTER_LEFT);
+
+        VBox vbSearchPage = new VBox(15, laPageTitle, hbId, hbLaBtns, vbSearchResult);
         vbSearchPage.setPrefWidth(COLUMN_WIDTH);
         vbSearchPage.setAlignment(Pos.TOP_CENTER);
         vbSearchPage.setStyle("-fx-padding: 15px;");

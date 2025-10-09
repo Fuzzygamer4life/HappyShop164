@@ -42,11 +42,13 @@ public class Main extends Application {
     //starts the system
     @Override
     public void start(Stage window) throws IOException {
-        startCustomerClient();
-        startPickerClient();
-        startOrderTracker();
+//        startCustomerClient();
+//        startPickerClient();
+//        startOrderTracker();
 
         startCustomerClient();
+        //when customer hits cancel with no item program breaks (lots of red in console)
+
         startPickerClient();
         startOrderTracker();
 
@@ -55,7 +57,7 @@ public class Main extends Application {
         initializeOrderMap();
 
         startWarehouseClient();
-        startWarehouseClient();
+        //startWarehouseClient();
 
         startEmergencyExit();
     }
