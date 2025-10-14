@@ -25,7 +25,6 @@ public class CustomerModel {
     public DatabaseRW databaseRW; //Interface type, not specific implementation
                                   //Benefits: Flexibility: Easily change the database implementation.
 
-    private Product theProduct =null; // product found from search
     private ArrayList<Product> trolley =  new ArrayList<>(); // a list of products in trolley
 
     // Four UI elements to be passed to CustomerView for display updates.
@@ -34,51 +33,58 @@ public class CustomerModel {
     private String displayTaTrolley = "";                                // Text area content showing current trolley items (Trolley Page)
     private String displayTaReceipt = "";                                // Text area content showing receipt after checkout (Receipt Page)
 
-    //SELECT productID, description, image, unitPrice,inStock quantity
-    void search() throws SQLException {
-        String productId = cusView.tfId.getText().trim();
-        if(!productId.isEmpty()){
-            theProduct = databaseRW.searchByProductId(productId); //search database
-            if(theProduct != null && theProduct.getStockQuantity()>0){
-                double unitPrice = theProduct.getUnitPrice();
-                String description = theProduct.getProductDescription();
-                int stock = theProduct.getStockQuantity();
 
-                String baseInfo = String.format("Product_Id: %s\n%s,\nPrice: £%.2f", productId, description, unitPrice);
-                String quantityInfo = stock < 100 ? String.format("\n%d units left.", stock) : "";
-                displayLaSearchResult = baseInfo + quantityInfo;
-                System.out.println(displayLaSearchResult);
+    public void addProduct() {
+
+        //TO-DO has dash becase finished
+        // 1. Merges items with the same product ID (combining their quantities). Done
+        // 2. Sorts the products in the trolley by product ID. Why would you want that?
+
+        Product newProd = cusView.obrLvProducts.getSelectionModel().getSelectedItem();
+        if (newProd != null) {
+            if (newProd.getStockQuantity() > 0)
+            {
+                if (trolley.contains(newProd))
+                {
+                    newProd.setOrderedQuantity(newProd.getOrderedQuantity() + 1);
+                }
+                else{
+                    newProd.setOrderedQuantity(1);
+                    trolley.add(newProd);
+                }
+                displayTaTrolley = ProductListFormatter.buildString(trolley);
             }
             else{
-                theProduct=null;
-                displayLaSearchResult = "No Product was found with ID " + productId;
-                System.out.println("No Product was found with ID " + productId);
+                System.out.println("No more of Product in stock");
             }
-        }else{
-            theProduct=null;
-            displayLaSearchResult = "Please type ProductID";
-            System.out.println("Please type ProductID.");
-        }
-        updateView();
-    }
-
-    void addToTrolley(){
-        if(theProduct!= null){
-
-            // trolley.add(theProduct) — Product is appended to the end of the trolley.
-            // To keep the trolley organized, add code here or call a method that:
-            //TODO
-            // 1. Merges items with the same product ID (combining their quantities).
-            // 2. Sorts the products in the trolley by product ID.
-            trolley.add(theProduct);
-            displayTaTrolley = ProductListFormatter.buildString(trolley); //build a String for trolley so that we can show it
         }
         else{
-            displayLaSearchResult = "Please search for an available product before adding it to the trolley";
-            System.out.println("must search and get an available product before add to trolley");
+            System.out.println("No product was selected");
         }
         displayTaReceipt=""; // Clear receipt to switch back to trolleyPage (receipt shows only when not empty)
         updateView();
+    }
+
+
+
+
+    void addToTrolley(){
+//        if(theProduct!= null){
+//
+//            // trolley.add(theProduct) — Product is appended to the end of the trolley.
+//            // To keep the trolley organized, add code here or call a method that:
+//            //TODO
+//            // 1. Merges items with the same product ID (combining their quantities).
+//            // 2. Sorts the products in the trolley by product ID.
+//            trolley.add(theProduct);
+//            displayTaTrolley = ProductListFormatter.buildString(trolley); //build a String for trolley so that we can show it
+//        }
+//        else{
+//            displayLaSearchResult = "Please search for an available product before adding it to the trolley";
+//            System.out.println("must search and get an available product before add to trolley");
+//        }
+//        displayTaReceipt=""; // Clear receipt to switch back to trolleyPage (receipt shows only when not empty)
+//        updateView();
     }
 
     private ArrayList<Product> productList = new ArrayList<>();
@@ -131,7 +137,6 @@ public class CustomerModel {
                             .append(p.getStockQuantity()).append(" available, ")
                             .append(p.getOrderedQuantity()).append(" requested)\n");
                 }
-                theProduct=null;
 
                 //TODO
                 // Add the following logic here:
@@ -180,17 +185,7 @@ public class CustomerModel {
     }
 
     void updateView() {
-        if(theProduct != null){
-            imageName = theProduct.getProductImageName();
-            String relativeImageUrl = StorageLocation.imageFolder +imageName; //relative file path, eg images/0001.jpg
-            // Get the full absolute path to the image
-            Path imageFullPath = Paths.get(relativeImageUrl).toAbsolutePath();
-            imageName = imageFullPath.toUri().toString(); //get the image full Uri then convert to String
-            System.out.println("Image absolute path: " + imageFullPath); // Debugging to ensure path is correct
-        }
-        else{
-            imageName = "imageHolder.jpg";
-        }
+        imageName = "imageHolder.jpg";
         cusView.update(imageName, displayLaSearchResult, displayTaTrolley,displayTaReceipt);
     }
      // extra notes:

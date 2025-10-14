@@ -9,7 +9,8 @@ public class CustomerController {
     public void doAction(String action) throws SQLException, IOException {
         switch (action) {
             case "Search":
-                cusModel.search();
+                System.out.println("inactive Search called");
+                //cusModel.search();
                 break;
             case "Add to Trolley":
                 cusModel.addToTrolley();
@@ -25,6 +26,13 @@ public class CustomerController {
                 break;
             case "\uD83D\uDD0D":
                 cusModel.searchProduct();
+                break;
+            case "Add":
+                System.out.println("Action :Act");
+                cusModel.addProduct();
+                break;
+            case "Remove":
+                System.out.println("Action :Remove");
                 break;
             default:
                 System.out.println("Unknown Action : " + action);
