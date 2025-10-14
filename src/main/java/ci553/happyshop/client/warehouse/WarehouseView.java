@@ -170,8 +170,8 @@ public class WarehouseView  {
                 throw new RuntimeException(e);
             }
         });
-        Button btnSearch = new Button("🔍");
         //Button btnSearch = new Button("\uD83D\uDD0D"); // Unicode for 🔍
+        Button btnSearch = new Button("🔍");
         btnSearch.setOnAction(this::buttonClick);
         btnSearch.setStyle(UIStyle.buttonStyle);
         HBox hbSearch = new HBox(10, tfSearchKeyword, btnSearch);
@@ -189,7 +189,7 @@ public class WarehouseView  {
 
         HBox hbLaBtns = new HBox(10, laSearchSummary, btnEdit,btnDelete);
         hbLaBtns.setAlignment(Pos.CENTER);
-        hbLaBtns.setPadding(new Insets(5)); //setPadding only works on Layout manager
+        hbLaBtns.setPadding(new Insets(5));
         //hbLaBtns.setStyle("-fx-padding: 5px;"); //setStyle works on any Node (eg. layout manager, controls)
 
         // data, an observable ArrayList, observed by obrLvProducts

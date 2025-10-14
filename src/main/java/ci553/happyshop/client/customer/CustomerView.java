@@ -4,6 +4,7 @@ import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -38,11 +39,8 @@ public class CustomerView  {
     private VBox vbReceiptPage;
 
     TextField tfId; //for user input on the search page. Made accessible so it can be accessed or modified by CustomerModel
-    TextField tfName; //for user input on the search page. Made accessible so it can be accessed by CustomerModel
 
     //four controllers needs updating when program going on
-    private ImageView ivProduct; //image area in searchPage
-    private Label lbProductInfo;//product text info in searchPage
     private TextArea taTrolley; //in trolley Page
     private TextArea taReceipt;//in receipt page
 
@@ -75,47 +73,39 @@ public class CustomerView  {
         viewWindow=window;// Sets viewWindow to this window for future reference and management.
     }
 
+    Label laSearchSummary;
+
     private VBox createSearchPage() {
+        //page being changed
         Label laPageTitle = new Label("Search by Product ID/Name");
         laPageTitle.setStyle(UIStyle.labelTitleStyle);
 
-        Label laId = new Label("ID:      ");
-        laId.setStyle(UIStyle.labelStyle);
         tfId = new TextField();
         tfId.setPromptText("eg. 0001");
         tfId.setStyle(UIStyle.textFiledStyle);
-        HBox hbId = new HBox(10, laId, tfId);
 
-        Label laName = new Label("Name:");
-        laName.setStyle(UIStyle.labelStyle);
-        tfName = new TextField();
-        tfName.setPromptText("implement it if you want");
-        tfName.setStyle(UIStyle.textFiledStyle);
-        HBox hbName = new HBox(10, laName, tfName);
-
-        Label laPlaceHolder = new Label(  " ".repeat(15)); //create left-side spacing so that this HBox aligns with others in the layout.
-        Button btnSearch = new Button("Search");
+        Button btnSearch = new Button("🔍");
+        //btnSearch.setOnAction(this::buttonClick);
         btnSearch.setStyle(UIStyle.buttonStyle);
-        btnSearch.setOnAction(this::buttonClicked);
-        Button btnAddToTrolley = new Button("Add to Trolley");
-        btnAddToTrolley.setStyle(UIStyle.buttonStyle);
-        btnAddToTrolley.setOnAction(this::buttonClicked);
-        HBox hbBtns = new HBox(10, laPlaceHolder,btnSearch, btnAddToTrolley);
+        HBox hbId = new HBox(10, tfId, btnSearch);
 
-        ivProduct = new ImageView("imageHolder.jpg");
-        ivProduct.setFitHeight(60);
-        ivProduct.setFitWidth(60);
-        ivProduct.setPreserveRatio(true); // Image keeps its original shape and fits inside 60×60
-        ivProduct.setSmooth(true); //make it smooth and nice-looking
+        laSearchSummary = new Label("Search Summary");
+        laSearchSummary.setStyle(UIStyle.labelStyle);
+        Button btnEdit = new Button("Edit");
+        btnEdit.setStyle(UIStyle.greenFillBtnStyle);
+        //btnEdit.setOnAction(this::buttonClick);
 
-        lbProductInfo = new Label("Thank you for shopping with us.");
-        lbProductInfo.setWrapText(true);
-        lbProductInfo.setMinHeight(Label.USE_PREF_SIZE);  // Allow auto-resize
-        lbProductInfo.setStyle(UIStyle.labelMulLineStyle);
-        HBox hbSearchResult = new HBox(5, ivProduct, lbProductInfo);
-        hbSearchResult.setAlignment(Pos.CENTER_LEFT);
+        Button btnDelete = new Button("Delete");
+        btnDelete.setStyle(UIStyle.grayFillBtnStyle);
+        //btnDelete.setOnAction(this::buttonClick);
 
-        VBox vbSearchPage = new VBox(15, laPageTitle, hbId, hbName, hbBtns, hbSearchResult);
+        HBox hbLaBtns = new HBox(10, laSearchSummary, btnEdit,btnDelete);
+        hbLaBtns.setAlignment(Pos.CENTER);
+        hbLaBtns.setPadding(new Insets(5));
+
+
+
+        VBox vbSearchPage = new VBox(15, laPageTitle, hbId,hbLaBtns);
         vbSearchPage.setPrefWidth(COLUMN_WIDTH);
         vbSearchPage.setAlignment(Pos.TOP_CENTER);
         vbSearchPage.setStyle("-fx-padding: 15px;");
@@ -193,8 +183,6 @@ public class CustomerView  {
 
     public void update(String imageName, String searchResult, String trolley, String receipt) {
 
-        ivProduct.setImage(new Image(imageName));
-        lbProductInfo.setText(searchResult);
         taTrolley.setText(trolley);
         if (!receipt.equals("")) {
             showTrolleyOrReceiptPage(vbReceiptPage);
