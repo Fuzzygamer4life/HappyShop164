@@ -23,6 +23,12 @@ public class CustomerController {
             case "OK & Close":
                 cusModel.closeReceipt();
                 break;
+            case "\uD83D\uDD0D":
+                cusModel.searchProduct();
+                break;
+            default:
+                System.out.println("Unknown Action : " + action);
+                break;
         }
     }
 

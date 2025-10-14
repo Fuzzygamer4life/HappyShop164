@@ -1,6 +1,7 @@
 package ci553.happyshop.client.customer;
 
 import ci553.happyshop.catalogue.Product;
+import ci553.happyshop.utility.StorageLocation;
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
@@ -20,7 +21,10 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * The CustomerView is separated into two sections by a line :
@@ -89,9 +93,29 @@ public class CustomerView  {
         tfId = new TextField();
         tfId.setPromptText("eg. 0001");
         tfId.setStyle(UIStyle.textFiledStyle);
+        tfId.setOnAction(actionEvent -> {
+            try {
+                cusController.doAction("🔍");  //pressing enter can also do search
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+
+
 
         Button btnSearch = new Button("🔍");
-        //btnSearch.setOnAction(this::buttonClick);
+        btnSearch.setOnAction(actionEvent -> {
+            try {
+                cusController.doAction("🔍");  //pressing enter can also do search
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         btnSearch.setStyle(UIStyle.buttonStyle);
         HBox hbId = new HBox(10, tfId, btnSearch);
 
@@ -99,11 +123,27 @@ public class CustomerView  {
         laSearchSummary.setStyle(UIStyle.labelStyle);
         Button btnEdit = new Button("Add");
         btnEdit.setStyle(UIStyle.greenFillBtnStyle);
-        //btnEdit.setOnAction(this::buttonClick);
+        btnEdit.setOnAction(actionEvent -> {
+            try {
+                cusController.doAction("Add");  //pressing enter can also do search
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         Button btnDelete = new Button("Remove");
         btnDelete.setStyle(UIStyle.grayFillBtnStyle);
-        //btnDelete.setOnAction(this::buttonClick);
+        btnDelete.setOnAction(actionEvent -> {
+                    try {
+                        cusController.doAction("Remove");  //pressing enter can also do search
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         HBox hbLaBtns = new HBox(10, laSearchSummary, btnEdit,btnDelete);
         hbLaBtns.setAlignment(Pos.CENTER);
@@ -114,12 +154,44 @@ public class CustomerView  {
         obrLvProducts.setPrefHeight(HEIGHT - 100);
         obrLvProducts.setFixedCellSize(50);
         obrLvProducts.setStyle(UIStyle.listViewStyle);
+        obrLvProducts.setCellFactory(param -> new ListCell<Product>() {
+            @Override
+            protected void updateItem(Product product, boolean empty) {
+                super.updateItem(product, empty);
+
+                if (empty || product == null) {
+                    setGraphic(null);
+                    System.out.println("setCellFactory - empty item");
+                } else {
+                    String imageName = product.getProductImageName(); // Get image name (e.g. "0001.jpg")
+                    String relativeImageUrl = StorageLocation.imageFolder + imageName;
+                    // Get the full absolute path to the image
+                    Path imageFullPath = Paths.get(relativeImageUrl).toAbsolutePath();
+                    String imageFullUri = imageFullPath.toUri().toString();// Build the full image Uri
+
+                    ImageView ivPro;
+                    try {
+                        ivPro = new ImageView(new Image(imageFullUri, 50,45, true,true)); // Attempt to load the product image
+                    } catch (Exception e) {
+                        // If loading fails, use a default image directly from the resources folder
+                        ivPro = new ImageView(new Image("imageHolder.jpg",50,45,true,true)); // Directly load from resources
+                    }
+
+                    Label laProToString = new Label(product.toString()); // Create a label for product details
+                    HBox hbox = new HBox(10, ivPro, laProToString); // Put ImageView and label in a horizontal layout
+                    setGraphic(hbox);  // Set the whole row content
+                }
+            }
+        });
 
         VBox vbSearchResult = new VBox(5,hbLaBtns, obrLvProducts);
+        //vbSearchResult.setAlignment(Pos.TOP_LEFT);
 
         VBox vbSearchPage = new VBox(15, laPageTitle, hbId, vbSearchResult);
         vbSearchPage.setPrefWidth(COLUMN_WIDTH);
-        vbSearchPage.setAlignment(Pos.TOP_CENTER);
+        //vbSearchPage.setAlignment(Pos.TOP_CENTER);
+        //vbSearchPage.setAlignment(Pos.TOP_LEFT);
+
         vbSearchPage.setStyle("-fx-padding: 15px;");
 
         return vbSearchPage;
@@ -192,6 +264,15 @@ public class CustomerView  {
         }
     }
 
+    void updateProductList(ArrayList<Product> productList)
+    {
+        int proCounter = productList.size();
+        System.out.println(proCounter);
+        laSearchSummary.setText(proCounter + " products found");
+        laSearchSummary.setVisible(true);
+        obeProductList.clear();
+        obeProductList.addAll(productList);
+    }
 
     public void update(String imageName, String searchResult, String trolley, String receipt) {
 

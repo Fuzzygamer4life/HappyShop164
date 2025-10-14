@@ -81,6 +81,24 @@ public class CustomerModel {
         updateView();
     }
 
+    private ArrayList<Product> productList = new ArrayList<>();
+    void searchProduct() throws SQLException {
+        System.out.println("Product Searching");
+        String searchText = cusView.tfId.getText();
+        System.out.println("Search text = " + searchText);
+
+        if (!searchText.equals(""))
+        {
+            productList = databaseRW.searchProduct(searchText);
+            cusView.updateProductList(productList);
+        }
+        else{
+            productList.clear();
+            System.out.println("Text is empty");
+        }
+        updateView();
+    }
+
     void checkOut() throws IOException, SQLException {
         if(!trolley.isEmpty()){
             // Group the products in the trolley by productId to optimize stock checking
