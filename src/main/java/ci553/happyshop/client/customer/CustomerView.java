@@ -1,8 +1,11 @@
 package ci553.happyshop.client.customer;
 
+import ci553.happyshop.catalogue.Product;
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -75,6 +78,9 @@ public class CustomerView  {
 
     Label laSearchSummary;
 
+    private ObservableList<Product> obeProductList; //observable product list
+    ListView<Product> obrLvProducts; //A ListView observes the product list
+
     private VBox createSearchPage() {
         //page being changed
         Label laPageTitle = new Label("Search by Product ID/Name");
@@ -91,11 +97,11 @@ public class CustomerView  {
 
         laSearchSummary = new Label("Search Summary");
         laSearchSummary.setStyle(UIStyle.labelStyle);
-        Button btnEdit = new Button("Edit");
+        Button btnEdit = new Button("Add");
         btnEdit.setStyle(UIStyle.greenFillBtnStyle);
         //btnEdit.setOnAction(this::buttonClick);
 
-        Button btnDelete = new Button("Delete");
+        Button btnDelete = new Button("Remove");
         btnDelete.setStyle(UIStyle.grayFillBtnStyle);
         //btnDelete.setOnAction(this::buttonClick);
 
@@ -103,9 +109,15 @@ public class CustomerView  {
         hbLaBtns.setAlignment(Pos.CENTER);
         hbLaBtns.setPadding(new Insets(5));
 
+        obeProductList = FXCollections.observableArrayList();
+        obrLvProducts = new ListView<>(obeProductList);//ListView proListView observes proList
+        obrLvProducts.setPrefHeight(HEIGHT - 100);
+        obrLvProducts.setFixedCellSize(50);
+        obrLvProducts.setStyle(UIStyle.listViewStyle);
 
+        VBox vbSearchResult = new VBox(5,hbLaBtns, obrLvProducts);
 
-        VBox vbSearchPage = new VBox(15, laPageTitle, hbId,hbLaBtns);
+        VBox vbSearchPage = new VBox(15, laPageTitle, hbId, vbSearchResult);
         vbSearchPage.setPrefWidth(COLUMN_WIDTH);
         vbSearchPage.setAlignment(Pos.TOP_CENTER);
         vbSearchPage.setStyle("-fx-padding: 15px;");
