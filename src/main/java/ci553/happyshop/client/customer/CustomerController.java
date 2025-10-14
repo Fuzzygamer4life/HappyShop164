@@ -26,6 +26,12 @@ public class CustomerController {
             case "\uD83D\uDD0D":
                 cusModel.searchProduct();
                 break;
+            case "Add":
+                System.out.println("Action :Act");
+                break;
+            case "Remove":
+                System.out.println("Action :Remove");
+                break;
             default:
                 System.out.println("Unknown Action : " + action);
                 break;
