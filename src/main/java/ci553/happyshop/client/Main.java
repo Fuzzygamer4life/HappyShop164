@@ -8,6 +8,7 @@ import ci553.happyshop.client.picker.PickerController;
 import ci553.happyshop.client.picker.PickerModel;
 import ci553.happyshop.client.picker.PickerView;
 
+import ci553.happyshop.client.userLogin.*;
 import ci553.happyshop.client.warehouse.*;
 import ci553.happyshop.orderManagement.OrderHub;
 import ci553.happyshop.storageAccess.DatabaseRW;
@@ -45,17 +46,18 @@ public class Main extends Application {
         startCustomerClient();
         startPickerClient();
         startOrderTracker();
+        startLogin();
 
-        startCustomerClient();
-        startPickerClient();
-        startOrderTracker();
+        //startCustomerClient();
+        //startPickerClient();
+        //startOrderTracker();
 
         // Initializes the order map for the OrderHub. This must be called after starting the observer clients
         // (such as OrderTracker and Picker clients) to ensure they are properly registered for receiving updates.
         initializeOrderMap();
 
         startWarehouseClient();
-        startWarehouseClient();
+        //startWarehouseClient();
 
         startEmergencyExit();
     }
@@ -84,6 +86,16 @@ public class Main extends Application {
         //RemoveProductNotifier removeProductNotifier = new RemoveProductNotifier();
         //removeProductNotifier.cusView = cusView;
         //cusModel.removeProductNotifier = removeProductNotifier;
+    }
+
+    loginView logView;
+    loginModel logModel;
+
+    private void startLogin()
+    {
+        logView = new loginView();
+        logModel = new loginModel();
+        logView.start(new Stage());
     }
 
     /** The picker GUI, - for staff to pack customer's order,
