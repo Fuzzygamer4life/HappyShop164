@@ -33,6 +33,7 @@ public class CustomerController {
                 break;
             case "Remove":
                 System.out.println("Action :Remove");
+                cusModel.removeProduct();
                 break;
             default:
                 System.out.println("Unknown Action : " + action);

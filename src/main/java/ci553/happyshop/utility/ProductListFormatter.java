@@ -19,7 +19,6 @@ public class ProductListFormatter {
      * @return A nicely formatted string representation of the product list with totals
      */
     public static String buildString(ArrayList<Product> proList) {
-        System.out.println("Using invalid string builder");
         StringBuilder sb = new StringBuilder();
         double totalPrice=0;
 

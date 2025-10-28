@@ -33,6 +33,31 @@ public class CustomerModel {
     private String displayTaTrolley = "";                                // Text area content showing current trolley items (Trolley Page)
     private String displayTaReceipt = "";                                // Text area content showing receipt after checkout (Receipt Page)
 
+    public void removeProduct()
+    {
+        Product newProd = cusView.obrLvProducts.getSelectionModel().getSelectedItem();
+        if (newProd != null)
+        {
+            if (trolley.contains(newProd))
+            {
+                System.out.println("Item : " + newProd.getProductId() + " reduced");
+                newProd.setOrderedQuantity(newProd.getOrderedQuantity() - 1);
+                if (newProd.getOrderedQuantity() == 0)
+                {
+                    trolley.remove(newProd);
+                }
+                displayTaTrolley = ProductListFormatter.buildString(trolley);
+            }
+            else{
+                System.out.println("Item not in trolley");
+            }
+        }
+        else{
+            System.out.println("no Product selected");
+        }
+        displayTaReceipt=""; // Clear receipt to switch back to trolleyPage (receipt shows only when not empty)
+        updateView();
+    }
 
     public void addProduct() {
 
@@ -42,7 +67,9 @@ public class CustomerModel {
 
         Product newProd = cusView.obrLvProducts.getSelectionModel().getSelectedItem();
         if (newProd != null) {
-            if (newProd.getStockQuantity() > 0)
+            System.out.println("Item stock : " + newProd.getStockQuantity());
+            System.out.println("Item ordered : " + newProd.getOrderedQuantity());
+            if (newProd.getStockQuantity() > 0 && newProd.getStockQuantity() - newProd.getOrderedQuantity() > 0)
             {
                 if (trolley.contains(newProd))
                 {
@@ -119,7 +146,6 @@ public class CustomerModel {
                 //get OrderHub and tell it to make a new Order
                 OrderHub orderHub =OrderHub.getOrderHub();
                 Order theOrder = orderHub.newOrder(trolley);
-                trolley.clear();
                 displayTaTrolley ="";
                 displayTaReceipt = String.format(
                         "Order_ID: %s\nOrdered_Date_Time: %s\n%s",
@@ -128,6 +154,11 @@ public class CustomerModel {
                         ProductListFormatter.buildString(theOrder.getProductList())
                 );
                 System.out.println(displayTaReceipt);
+                for (Product prod : productList)
+                {
+                    prod.setOrderedQuantity(0);
+                }
+                trolley.clear();
             }
             else{ // Some products have insufficient stock — build an error message to inform the customer
                 StringBuilder errorMsg = new StringBuilder();
