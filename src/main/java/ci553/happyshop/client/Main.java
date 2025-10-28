@@ -43,10 +43,15 @@ public class Main extends Application {
     //starts the system
     @Override
     public void start(Stage window) throws IOException {
+        startLogin();
+    }
+
+    public void openMainWindows()
+    {
         startCustomerClient();
         startPickerClient();
         startOrderTracker();
-        startLogin();
+
 
         //startCustomerClient();
         //startPickerClient();
@@ -93,8 +98,11 @@ public class Main extends Application {
 
     private void startLogin()
     {
+        logModel = new loginModel(this);
         logView = new loginView();
-        logModel = new loginModel();
+        logModel.logView = logView;
+        logView.logMod = logModel;
+
         logView.start(new Stage());
     }
 
