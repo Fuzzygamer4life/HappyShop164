@@ -146,6 +146,8 @@ public class DerbyRW implements DatabaseRW {
                 boolean allSufficient = true; // Flag to track if all products have sufficient stock
 
                 for (Product product : proList) {
+
+
                     checkStmt.setString(1, product.getProductId());
                     ResultSet rs = checkStmt.executeQuery();
 
