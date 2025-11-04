@@ -36,7 +36,7 @@ public class loginView {
 //        window.setScene(scene);
 //        window.setTitle("🛒 HappyShop Sign In Client");
 
-        WinPosManager.registerWindow(thisWindow, WIDTH, HEIGHT); //calculate position x and y for this window
+        //WinPosManager.registerWindow(thisWindow, WIDTH, HEIGHT); //calculate position x and y for this window
         thisWindow.show();
     }
 
