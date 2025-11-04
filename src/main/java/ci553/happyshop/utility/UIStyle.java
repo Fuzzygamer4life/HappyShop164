@@ -52,6 +52,10 @@ public record UIStyle() {
             "-fx-text-fill: black; " +
             "-fx-background-color: lightblue;";
 
+    public static final String redTextStyle = "-fx-font-weight: bold; " +
+            "-fx-font-size: 14px; " +
+            "-fx-text-fill: red; " ;
+
     public static final String comboBoxStyle ="-fx-font-weight: bold; " +
             "-fx-font-size: 14px;";
 
