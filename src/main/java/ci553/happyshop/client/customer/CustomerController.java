@@ -17,6 +17,32 @@ public class CustomerController {
             cusModel.removeItem();
         }
     }
+
+
+    public void doAction(String action){
+        switch (action) {
+            case "Clear":
+                System.out.println("Performing action : Clear");
+                break;
+            case "Check Out":
+                System.out.println("Performing action : Check Out");
+                try {
+                    cusModel.checkOut();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            case "OK & Close":
+                cusModel.closeReceipt();
+                break;
+            default:
+                System.out.println("Invalid action : " + action);
+                break;
+        }
+    }
+
     public void searchItems(String itemID)
     {
         try {

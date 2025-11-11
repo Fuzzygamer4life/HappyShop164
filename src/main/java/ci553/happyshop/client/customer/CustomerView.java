@@ -226,7 +226,13 @@ public class CustomerView  {
     private void buttonClicked(ActionEvent event) {
         Button btn = (Button)event.getSource();
         String action = btn.getText();
-        cusController.doAction(action.equals(addText));
+        if (action.equals(addText) || action.equals(remText))
+        {
+            cusController.doAction(action.equals(addText));
+        }
+        else{
+            cusController.doAction(action);
+        }
     }
 
     public void update(String trolley, String receipt) {
