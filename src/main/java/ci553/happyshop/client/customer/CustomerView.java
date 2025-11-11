@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * The CustomerView is separated into two sections by a line :
@@ -36,6 +37,9 @@ import java.util.ArrayList;
 
 public class CustomerView  {
     public CustomerController cusController;
+
+     static String addText = "Add";
+     static String remText = "Remove";
 
     private final int WIDTH = UIStyle.customerWinWidth;
     private final int HEIGHT = UIStyle.customerWinHeight;
@@ -100,7 +104,7 @@ public class CustomerView  {
         prodSearchField.setOnAction(this::trolleySearch);
 
         Button btnSearch = new Button("🔍");
-        btnSearch.setOnAction(this::buttonClicked);
+        btnSearch.setOnAction(this::trolleySearch);
 
         btnSearch.setStyle(UIStyle.buttonStyle);
         HBox hbId = new HBox(10, prodSearchField, btnSearch);
@@ -108,11 +112,11 @@ public class CustomerView  {
         searchResult = new Label("Search Summary");
         searchResult.setStyle(UIStyle.labelStyle);
 
-        Button btnEdit = new Button("Add");
+        Button btnEdit = new Button(addText);
         btnEdit.setStyle(UIStyle.greenFillBtnStyle);
         btnEdit.setOnAction(this::buttonClicked);
 
-        Button btnDelete = new Button("Remove");
+        Button btnDelete = new Button(remText);
         btnDelete.setStyle(UIStyle.grayFillBtnStyle);
         btnDelete.setOnAction(this::buttonClicked);
 
@@ -216,36 +220,16 @@ public class CustomerView  {
     {
         String searchRes = prodSearchField.getText();
         System.out.println("Grabbed item from label : " + searchRes);
+        cusController.searchItems(searchRes);
     }
 
     private void buttonClicked(ActionEvent event) {
-        try{
-            Button btn = (Button)event.getSource();
-            String action = btn.getText();
-
-            System.out.println("Performing Acction : " + action);
-            if (true)
-            {
-                return;
-            }
-
-            if(action.equals("Add to Trolley")){
-                showTrolleyOrReceiptPage(vbTrolleyPage); //ensure trolleyPage shows if the last customer did not close their receiptPage
-            }
-            if(action.equals("OK & Close")){
-                showTrolleyOrReceiptPage(vbTrolleyPage);
-            }
-            cusController.doAction(action);
-        }
-        catch(SQLException e){
-            e.printStackTrace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        Button btn = (Button)event.getSource();
+        String action = btn.getText();
+        cusController.doAction(action.equals(addText));
     }
 
-
-    public void update(String imageName, String searchResult, String trolley, String receipt) {
+    public void update(String trolley, String receipt) {
 
         taTrolley.setText(trolley);
         if (!receipt.equals("")) {
@@ -253,14 +237,20 @@ public class CustomerView  {
             taReceipt.setText(receipt);
         }
     }
-    void updateProductList(ArrayList<Product> productList)
-    {
-        int proCounter = productList.size();
-        System.out.println(proCounter);
+    public void update(String trolley, String receipt, ArrayList<Product> prodList) {
+
+        taTrolley.setText(trolley);
+        if (!receipt.equals("")) {
+            showTrolleyOrReceiptPage(vbReceiptPage);
+            taReceipt.setText(receipt);
+        }
+
+        int proCounter = prodList.size();
+        System.out.println("products found from search : " + proCounter);
         searchResult.setText(proCounter + " products found");
         searchResult.setVisible(true);
         obeProductList.clear();
-        obeProductList.addAll(productList);
+        obeProductList.addAll(prodList);
     }
 
     // Replaces the last child of hbRoot with the specified page.

@@ -6,23 +6,23 @@ import java.sql.SQLException;
 public class CustomerController {
     public CustomerModel cusModel;
 
-    public void doAction(String action) throws SQLException, IOException {
-        switch (action) {
-            case "Search":
-                cusModel.search();
-                break;
-            case "Add to Trolley":
-                cusModel.addToTrolley();
-                break;
-            case "Cancel":
-                cusModel.cancel();
-                break;
-            case "Check Out":
-                cusModel.checkOut();
-                break;
-            case "OK & Close":
-                cusModel.closeReceipt();
-                break;
+    public void doAction(boolean addingItem){
+        if (addingItem)
+        {
+            System.out.println("Attempting Adding Item");
+            cusModel.addItem();
+        }
+        else{
+            System.out.println("Attempting Removing Item");
+            cusModel.removeItem();
+        }
+    }
+    public void searchItems(String itemID)
+    {
+        try {
+            cusModel.searchprod(itemID);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
