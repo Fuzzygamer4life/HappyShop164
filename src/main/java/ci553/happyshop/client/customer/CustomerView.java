@@ -1,9 +1,14 @@
 package ci553.happyshop.client.customer;
 
+import ci553.happyshop.catalogue.Product;
+import ci553.happyshop.utility.StorageLocation;
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
 import ci553.happyshop.utility.WindowBounds;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -16,7 +21,10 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  * The CustomerView is separated into two sections by a line :
@@ -75,49 +83,83 @@ public class CustomerView  {
         viewWindow=window;// Sets viewWindow to this window for future reference and management.
     }
 
+    TextField prodSearchField;
+    Label searchResult;
+
+    ObservableList<Product> obeProductList; //observable product list
+    ListView<Product> obrLvProducts; //A ListView observes the product list
+
     private VBox createSearchPage() {
+        //page being changed
         Label laPageTitle = new Label("Search by Product ID/Name");
         laPageTitle.setStyle(UIStyle.labelTitleStyle);
 
-        Label laId = new Label("ID:      ");
-        laId.setStyle(UIStyle.labelStyle);
-        tfId = new TextField();
-        tfId.setPromptText("eg. 0001");
-        tfId.setStyle(UIStyle.textFiledStyle);
-        HBox hbId = new HBox(10, laId, tfId);
+        prodSearchField = new TextField();
+        prodSearchField.setPromptText("eg. 0001");
+        prodSearchField.setStyle(UIStyle.textFiledStyle);
+        prodSearchField.setOnAction(this::trolleySearch);
 
-        Label laName = new Label("Name:");
-        laName.setStyle(UIStyle.labelStyle);
-        tfName = new TextField();
-        tfName.setPromptText("implement it if you want");
-        tfName.setStyle(UIStyle.textFiledStyle);
-        HBox hbName = new HBox(10, laName, tfName);
-
-        Label laPlaceHolder = new Label(  " ".repeat(15)); //create left-side spacing so that this HBox aligns with others in the layout.
-        Button btnSearch = new Button("Search");
-        btnSearch.setStyle(UIStyle.buttonStyle);
+        Button btnSearch = new Button("🔍");
         btnSearch.setOnAction(this::buttonClicked);
-        Button btnAddToTrolley = new Button("Add to Trolley");
-        btnAddToTrolley.setStyle(UIStyle.buttonStyle);
-        btnAddToTrolley.setOnAction(this::buttonClicked);
-        HBox hbBtns = new HBox(10, laPlaceHolder,btnSearch, btnAddToTrolley);
 
-        ivProduct = new ImageView("imageHolder.jpg");
-        ivProduct.setFitHeight(60);
-        ivProduct.setFitWidth(60);
-        ivProduct.setPreserveRatio(true); // Image keeps its original shape and fits inside 60×60
-        ivProduct.setSmooth(true); //make it smooth and nice-looking
+        btnSearch.setStyle(UIStyle.buttonStyle);
+        HBox hbId = new HBox(10, prodSearchField, btnSearch);
 
-        lbProductInfo = new Label("Thank you for shopping with us.");
-        lbProductInfo.setWrapText(true);
-        lbProductInfo.setMinHeight(Label.USE_PREF_SIZE);  // Allow auto-resize
-        lbProductInfo.setStyle(UIStyle.labelMulLineStyle);
-        HBox hbSearchResult = new HBox(5, ivProduct, lbProductInfo);
-        hbSearchResult.setAlignment(Pos.CENTER_LEFT);
+        searchResult = new Label("Search Summary");
+        searchResult.setStyle(UIStyle.labelStyle);
 
-        VBox vbSearchPage = new VBox(15, laPageTitle, hbId, hbName, hbBtns, hbSearchResult);
+        Button btnEdit = new Button("Add");
+        btnEdit.setStyle(UIStyle.greenFillBtnStyle);
+        btnEdit.setOnAction(this::buttonClicked);
+
+        Button btnDelete = new Button("Remove");
+        btnDelete.setStyle(UIStyle.grayFillBtnStyle);
+        btnDelete.setOnAction(this::buttonClicked);
+
+        HBox hbLaBtns = new HBox(10, searchResult, btnEdit,btnDelete);
+        hbLaBtns.setAlignment(Pos.CENTER);
+        hbLaBtns.setPadding(new Insets(5));
+
+        obeProductList = FXCollections.observableArrayList();
+        obrLvProducts = new ListView<>(obeProductList);//ListView proListView observes proList
+        obrLvProducts.setPrefHeight(HEIGHT - 100);
+        obrLvProducts.setFixedCellSize(50);
+        obrLvProducts.setStyle(UIStyle.listViewStyle);
+        obrLvProducts.setCellFactory(param -> new ListCell<Product>() {
+            @Override
+            protected void updateItem(Product product, boolean empty) {
+                super.updateItem(product, empty);
+
+                if (empty || product == null) {
+                    setGraphic(null);
+                    System.out.println("setCellFactory - empty item");
+                } else {
+                    String imageName = product.getProductImageName(); // Get image name (e.g. "0001.jpg")
+                    String relativeImageUrl = StorageLocation.imageFolder + imageName;
+                    // Get the full absolute path to the image
+                    Path imageFullPath = Paths.get(relativeImageUrl).toAbsolutePath();
+                    String imageFullUri = imageFullPath.toUri().toString();// Build the full image Uri
+
+                    ImageView ivPro;
+                    try {
+                        ivPro = new ImageView(new Image(imageFullUri, 50,45, true,true)); // Attempt to load the product image
+                    } catch (Exception e) {
+                        // If loading fails, use a default image directly from the resources folder
+                        ivPro = new ImageView(new Image("imageHolder.jpg",50,45,true,true)); // Directly load from resources
+                    }
+
+                    Label laProToString = new Label(product.toString()); // Create a label for product details
+                    HBox hbox = new HBox(10, ivPro, laProToString); // Put ImageView and label in a horizontal layout
+                    setGraphic(hbox);  // Set the whole row content
+                }
+            }
+        });
+
+        VBox vbSearchResult = new VBox(5,hbLaBtns, obrLvProducts);
+
+        VBox vbSearchPage = new VBox(15, laPageTitle, hbId, vbSearchResult);
         vbSearchPage.setPrefWidth(COLUMN_WIDTH);
-        vbSearchPage.setAlignment(Pos.TOP_CENTER);
+
         vbSearchPage.setStyle("-fx-padding: 15px;");
 
         return vbSearchPage;
@@ -170,11 +212,23 @@ public class CustomerView  {
         return vbReceiptPage;
     }
 
+    private void trolleySearch(ActionEvent event)
+    {
+        String searchRes = prodSearchField.getText();
+        System.out.println("Grabbed item from label : " + searchRes);
+    }
 
     private void buttonClicked(ActionEvent event) {
         try{
             Button btn = (Button)event.getSource();
             String action = btn.getText();
+
+            System.out.println("Performing Acction : " + action);
+            if (true)
+            {
+                return;
+            }
+
             if(action.equals("Add to Trolley")){
                 showTrolleyOrReceiptPage(vbTrolleyPage); //ensure trolleyPage shows if the last customer did not close their receiptPage
             }
@@ -193,13 +247,20 @@ public class CustomerView  {
 
     public void update(String imageName, String searchResult, String trolley, String receipt) {
 
-        ivProduct.setImage(new Image(imageName));
-        lbProductInfo.setText(searchResult);
         taTrolley.setText(trolley);
         if (!receipt.equals("")) {
             showTrolleyOrReceiptPage(vbReceiptPage);
             taReceipt.setText(receipt);
         }
+    }
+    void updateProductList(ArrayList<Product> productList)
+    {
+        int proCounter = productList.size();
+        System.out.println(proCounter);
+        searchResult.setText(proCounter + " products found");
+        searchResult.setVisible(true);
+        obeProductList.clear();
+        obeProductList.addAll(productList);
     }
 
     // Replaces the last child of hbRoot with the specified page.
@@ -213,6 +274,6 @@ public class CustomerView  {
 
     WindowBounds getWindowBounds() {
         return new WindowBounds(viewWindow.getX(), viewWindow.getY(),
-                  viewWindow.getWidth(), viewWindow.getHeight());
+                viewWindow.getWidth(), viewWindow.getHeight());
     }
 }
