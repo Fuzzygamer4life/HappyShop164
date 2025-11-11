@@ -11,52 +11,43 @@ public class loginModel {
     static boolean addUserData = false;
     public loginView logView;
     Main mainProgram;
-    static String[] fakeUserData = new String[]{
-            "Zayk,1234",
-            "Zamla,67",
-            "Zang,234",
-            "Zapp,12456",
-            "Zalik,674",
-            "Zany,7568",
-            "Zabadaba,Yaya",
-            "Zankyou,gsdg",
-            "Zabe,cvb",
-            "Zate,sdgfser",
+
+    static userData[] defData = new userData[]{
+            new userData("Zack","58008"),
+            new userData("Zay1k","12asf34"),
+            new userData("Zay213k","12fasf34"),
+            new userData("Zay55k","123fasf4"),
+            new userData("Zay15k","12fas34"),
+            new userData("Za51yk","12fasf34"),
+            new userData("Zayaak","12fasf34"),
+            new userData("Zay4sk","12fafa34"),
+            new userData("Zayfask","123fasf4"),
+            new userData("Zayasfk","12afs34"),
+            new userData("abc","123")
     };
 
-    public void addUser(String userData)
+    public void addUser(userData userInfo)
     {
+        String data = userInfo.userToData();
         try{
             File mainFile = new File("src/main/resources/UserData/CustData.txt");
             FileWriter textFile = new FileWriter(mainFile,true);
-            textFile.write(userData);
+            textFile.write(data);
             textFile.write("\n");
-            System.out.println("Added User Data : " + userData);
+            System.out.println("Added User Data : " + data);
             textFile.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-    public void addUser(String userName,String userPass)
-    {
-        try{
-            File mainFile = new File("src/main/resources/UserData/CustData.txt");
-            FileWriter textFile = new FileWriter(mainFile,true);
-            textFile.write(userName + "," + userPass);
-            textFile.write("\n");
-            System.out.println("Added User Data : " + userName);
-            textFile.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
 
     public loginModel(Main mainProgram)
     {
         this.mainProgram = mainProgram;
         if (addUserData)
         {
-            for (String data : fakeUserData)
+            for (userData data : defData)
             {
                 addUser(data);
             }
@@ -83,7 +74,7 @@ public class loginModel {
             if (!hasUsername(user,pass))
             {
                 System.out.println("Valid username");
-                addUser(user,pass);
+                addUser(new userData(user,pass));
                 return true;
             }
             System.out.println("Invalid username");
@@ -106,14 +97,11 @@ public class loginModel {
             while (textFile.hasNextLine())
             {
                 String currentLine = textFile.nextLine();
-                int[] commaPoints = new int[2];
-                commaPoints[0] = currentLine.indexOf(",");
-                if (commaPoints[0] == -1)
+                String[] currentData = splitData(currentLine);
+
+                if (currentData != null)
                 {
-                    System.out.println("Invalid Line in text files");
-                }
-                else{
-                    if ((Objects.equals(userName, currentLine.substring(0, commaPoints[0]))))
+                    if ((Objects.equals(userName, currentData[0])))
                     {
                         return true;
                     }
@@ -127,6 +115,22 @@ public class loginModel {
         return false;
     }
 
+    String[] splitData(String userString)
+    {
+        if (userString == null)
+        {
+            return null;
+        }
+        int[] commaPoints = new int[2];
+        commaPoints[0] = userString.indexOf(",");
+        commaPoints[1] = (commaPoints[0] == -1 ? -1 : userString.indexOf(",",commaPoints[0] + 1));
+        if (commaPoints[commaPoints.length-1] != -1)
+        {
+            return new String[]{userString.substring(0,commaPoints[0]),userString.substring(commaPoints[0] + 1,commaPoints[1])};
+        }
+        return null;
+    }
+
     String searchData(String username,String password)
     {
         try{
@@ -137,18 +141,17 @@ public class loginModel {
             while (textFile.hasNextLine())
             {
                 String currentLine = textFile.nextLine();
-                int[] commaPoints = new int[2];
-                commaPoints[0] = currentLine.indexOf(",");
-                if (commaPoints[0] == -1)
+                String[] currentData = splitData(currentLine);
+                if (currentData != null)
                 {
-                    System.out.println("Invalid Line in text files");
-                }
-                else{
-                    if ((Objects.equals(username, currentLine.substring(0, commaPoints[0]))) && (Objects.equals(password, currentLine.substring(1 + commaPoints[0]))))
+                    if ((Objects.equals(username, currentData[0])) && (Objects.equals(password, currentData[1])))
                     {
                         System.out.println("Password Valid");
                         return currentLine;
                     }
+                }
+                else{
+                    System.out.println("Encountered Invalid Line");
                 }
             }
 
