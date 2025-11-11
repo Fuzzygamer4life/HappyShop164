@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * TODO
  * You can either directly modify the CustomerModel class to implement the required tasks,
@@ -185,7 +186,7 @@ public class CustomerModel {
                 if (listProduct.getProductId().equals(pro.getProductId()))
                 {
                     System.out.println("Item found");
-                    if (listProduct.getStockQuantity() == 1)
+                    if (listProduct.getOrderedQuantity() == 1)
                     {
                         trolley.remove(listProduct);
                     }
@@ -199,6 +200,49 @@ public class CustomerModel {
 
             displayTaTrolley = ProductListFormatter.buildString(trolley); //build a String for trolley so that we can show it
             updateView(false);
+        }
+    }
+
+
+    final static String noSort = "NOSORT";
+    final static String idSort = "ID";
+    final static String alphaSort = "ALPHA";
+    void trolleySort(String sortType)
+    {
+        switch (sortType)
+        {
+            case idSort:
+                //smallest to largest using insersion sort
+                for (int i = 0 ; i < trolley.size() ; i++)
+                {
+                    Product currentItem = trolley.get(i);
+                    Integer itemCode = Integer.parseInt(currentItem.getProductId().trim());
+                    int pos = i;
+                    //Integer.parseInt("String Text".trim()); gets int from string
+                    while (pos != 0 && Integer.parseInt(trolley.get(pos - 1).getProductId().trim()) > itemCode)
+                    {
+                        trolley.remove(pos);
+                        trolley.add(pos-1,currentItem);
+                        pos--;
+                    }
+                }
+                break;
+            case alphaSort:
+                for (int i = 0 ; i < trolley.size() ; i++)
+                {
+                    Product currentItem = trolley.get(i);
+
+                    int pos = i;
+                    while (pos != 0 && (currentItem.getProductDescription().compareTo(trolley.get(pos - 1).getProductDescription())) < 0)
+                    {
+                        trolley.remove(pos);
+                        trolley.add(pos-1,currentItem);
+                        pos--;
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -236,6 +280,9 @@ public class CustomerModel {
                     trolley.add(pro);
                 }
             }
+
+            trolleySort(alphaSort);
+
             displayTaTrolley = ProductListFormatter.buildString(trolley); //build a String for trolley so that we can show it
             updateView(false);
             return;
