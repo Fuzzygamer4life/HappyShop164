@@ -281,7 +281,7 @@ public class CustomerModel {
                 }
             }
 
-            trolleySort(alphaSort);
+            trolleySort(noSort);
 
             displayTaTrolley = ProductListFormatter.buildString(trolley); //build a String for trolley so that we can show it
             updateView(false);
