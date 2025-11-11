@@ -49,8 +49,11 @@ public class OrderFileManager {
         String orderFileName = String.valueOf(orderId)+".txt";
         Path path = dir.resolve(orderFileName); // eg. orders/ordered/12.txt
         if(Files.notExists(path)) {
+            System.out.println("CreatingPath");
             Files.createFile(path);
+            System.out.println("CreatingPat2");
             try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+                System.out.println("CreatingPat3");
                 writer.write(orderDetail);
                 writer.newLine();
                 System.out.println(path + " created");
