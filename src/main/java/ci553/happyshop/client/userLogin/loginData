@@ -1,0 +1,5 @@
+This package is to test a login function it should
+
+Ask for a username and password
+- Checks the data within a database
+- send user to the relevand windows

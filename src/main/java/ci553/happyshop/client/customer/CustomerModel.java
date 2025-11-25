@@ -2,6 +2,7 @@ package ci553.happyshop.client.customer;
 
 import ci553.happyshop.catalogue.Order;
 import ci553.happyshop.catalogue.Product;
+import ci553.happyshop.client.userLogin.userData;
 import ci553.happyshop.client.warehouse.WarehouseModel;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.orderManagement.OrderHub;
@@ -40,12 +41,13 @@ public class CustomerModel {
     public final static String NOSORT = "sort_none";
     public final static String IDSORT = "sort_id";
     public final static String ALPHASORT = "sort_alpha";
+
+    userData currentAccount;
     String currentSortType = "";
-    int currentAccountMoney = 0;
-    public CustomerModel(String sortType,int currentAccountMoney)
+    public CustomerModel(userData currentAccount)
     {
-        this.currentSortType = sortType;
-        this.currentAccountMoney = currentAccountMoney;
+        this.currentAccount = currentAccount;
+        currentSortType = currentAccount.getSortType();
     }
 
     void checkOut() throws IOException, SQLException {
@@ -61,7 +63,7 @@ public class CustomerModel {
             {
                 cost += prod.getUnitPrice() * prod.getOrderedQuantity();
             }
-            if (cost > ((double)currentAccountMoney)/100)
+            if (cost > (currentAccount.getAccMoney()))
             {
                 cusView.errorText.setText("trolly too expensive for funds");
                 System.out.println("trolley is too expensive");
@@ -71,7 +73,7 @@ public class CustomerModel {
 
                 if(insufficientProducts.isEmpty()){ // If stock is sufficient for all products
                     //get OrderHub and tell it to make a new Order
-                    currentAccountMoney -= (cost*100);
+                    currentAccount.changeMoney(currentAccount.getAccMoney() - (cost));
                     OrderHub orderHub =OrderHub.getOrderHub();
                     System.out.println("Making order");
                     Order theOrder = orderHub.newOrder(trolley);
@@ -274,16 +276,16 @@ public class CustomerModel {
         System.out.println("Cancel");
         trolley.clear();
         displayTaTrolley = ProductListFormatter.buildString(trolley); //build a String for trolley so that we can show it
-        cusView.update(displayTaTrolley,displayTaReceipt,productList,currentAccountMoney);
+        cusView.update(displayTaTrolley,displayTaReceipt,productList,currentAccount.getAccMoney());
         updateView(false);
     }
     void updateView(boolean newProdList) {
         if (newProdList)
         {
-            cusView.update(displayTaTrolley,displayTaReceipt,productList,currentAccountMoney);
+            cusView.update(displayTaTrolley,displayTaReceipt,productList,currentAccount.getAccMoney());
         }
         else{
-            cusView.update(displayTaTrolley,displayTaReceipt,currentAccountMoney);
+            cusView.update(displayTaTrolley,displayTaReceipt,currentAccount.getAccMoney());
         }
     }
 

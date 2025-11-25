@@ -1,5 +1,6 @@
 package ci553.happyshop.client.customer;
 
+import ci553.happyshop.client.userLogin.userData;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.storageAccess.DatabaseRWFactory;
 import javafx.application.Application;
@@ -26,16 +27,17 @@ public class CustomerClient extends Application {
      */
     @Override
     public void start(Stage window) {
+        userData defUser = new userData("Def_User","Def_Pass");
         CustomerView cusView = new CustomerView();
         CustomerController cusController = new CustomerController();
-        CustomerModel cusModel = new CustomerModel(CustomerModel.NOSORT,1000);
+        CustomerModel cusModel = new CustomerModel(defUser);
         DatabaseRW databaseRW = DatabaseRWFactory.createDatabaseRW();
 
         cusView.cusController = cusController;
         cusController.cusModel = cusModel;
         cusModel.cusView = cusView;
         cusModel.databaseRW = databaseRW;
-        cusView.start(window,"Belkan",10000);
+        cusView.start(window,defUser);
 
         //RemoveProductNotifier removeProductNotifier = new RemoveProductNotifier();
         //removeProductNotifier.cusView = cusView;

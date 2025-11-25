@@ -1,6 +1,7 @@
 package ci553.happyshop.client.customer;
 
 import ci553.happyshop.catalogue.Product;
+import ci553.happyshop.client.userLogin.userData;
 import ci553.happyshop.utility.StorageLocation;
 import ci553.happyshop.utility.UIStyle;
 import ci553.happyshop.utility.WinPosManager;
@@ -61,8 +62,8 @@ public class CustomerView  {
     // (e.g., positioning the removeProductNotifier when needed).
     private Stage viewWindow;
 
-    public void start(Stage window,String userName,int funds) {
-        VBox vbSearchPage = createSearchPage(userName,funds);
+    public void start(Stage window,userData data) {
+        VBox vbSearchPage = createSearchPage(data.getUserName(),data.getAccMoney());
         vbTrolleyPage = CreateTrolleyPage();
         vbReceiptPage = createReceiptPage();
 
@@ -117,10 +118,10 @@ public class CustomerView  {
         return fundString;
     }
     Label userFunds;
-    private VBox createSearchPage(String userName,int funds) {
+    private VBox createSearchPage(String userName,double funds) {
 
         Label userTitle = new Label("User: " + userName);
-        userFunds = new Label("Funds: £" + getFundValue(funds));
+        userFunds = new Label("Funds: £" + funds);
         userTitle.setStyle(UIStyle.labelStyle);
         userFunds.setStyle(UIStyle.labelStyle);
         HBox userInfo = new HBox(10, userTitle, userFunds);
@@ -271,15 +272,15 @@ public class CustomerView  {
         }
     }
 
-    public void update(String trolley, String receipt,int funds) {
-        userFunds.setText("Funds: £" + getFundValue(funds));
+    public void update(String trolley, String receipt,double funds) {
+        userFunds.setText("Funds: £" + funds);
         taTrolley.setText(trolley);
         if (!receipt.equals("")) {
             showTrolleyOrReceiptPage(vbReceiptPage);
             taReceipt.setText(receipt);
         }
     }
-    public void update(String trolley, String receipt, ArrayList<Product> prodList,int funds) {
+    public void update(String trolley, String receipt, ArrayList<Product> prodList,double funds) {
 
         taTrolley.setText(trolley);
         if (!receipt.equals("")) {
@@ -290,7 +291,7 @@ public class CustomerView  {
         {
             errorText.setVisible(true);
         }
-        userFunds.setText("Funds: £" + getFundValue(funds));
+        userFunds.setText("Funds: £" + funds);
         int proCounter = prodList.size();
         System.out.println("products found from search : " + proCounter);
         searchResult.setText(proCounter + " products found");

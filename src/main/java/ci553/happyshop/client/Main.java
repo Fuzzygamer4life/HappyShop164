@@ -8,6 +8,9 @@ import ci553.happyshop.client.picker.PickerController;
 import ci553.happyshop.client.picker.PickerModel;
 import ci553.happyshop.client.picker.PickerView;
 
+import ci553.happyshop.client.userLogin.loginModel;
+import ci553.happyshop.client.userLogin.loginView;
+import ci553.happyshop.client.userLogin.userData;
 import ci553.happyshop.client.warehouse.*;
 import ci553.happyshop.orderManagement.OrderHub;
 import ci553.happyshop.storageAccess.DatabaseRW;
@@ -39,14 +42,24 @@ public class Main extends Application {
         launch(args); // Launches the JavaFX application and calls the @Override start()
     }
 
-    //starts the system
-    @Override
-    public void start(Stage window) throws IOException {
+    loginView logView;
+    loginModel logModel;
 
+    private void startLogin()
+    {
+        logModel = new loginModel(this);
+        logView = new loginView();
+        logModel.logView = logView;
+        logView.logMod = logModel;
+
+        logView.start(new Stage());
+    }
+    public void openMainWindows(userData currentAccount)
+    {
         Boolean isCustomer = true;
         if (isCustomer)
         {
-            startCustomerClient();
+            startCustomerClient(currentAccount);
             startOrderTracker();
         }
         else{
@@ -68,6 +81,11 @@ public class Main extends Application {
 
         startEmergencyExit();
     }
+    //starts the system
+    @Override
+    public void start(Stage window) throws IOException {
+        startLogin();
+    }
 
     /** The customer GUI -search prodduct, add to trolley, cancel/submit trolley, view receipt
      *
@@ -78,18 +96,17 @@ public class Main extends Application {
      * Also creates the RemoveProductNotifier, which tracks the position of the Customer View
      * and is triggered by the Customer Model when needed.
      */
-    private void startCustomerClient(){
-        int funds = 26899;
+    private void startCustomerClient(userData accData){
         CustomerView cusView = new CustomerView();
         CustomerController cusController = new CustomerController();
-        CustomerModel cusModel = new CustomerModel(CustomerModel.NOSORT,funds);
+        CustomerModel cusModel = new CustomerModel(accData);
         DatabaseRW databaseRW = DatabaseRWFactory.createDatabaseRW();
 
         cusView.cusController = cusController;
         cusController.cusModel = cusModel;
         cusModel.cusView = cusView;
         cusModel.databaseRW = databaseRW;
-        cusView.start(new Stage(),"Belkan",funds);
+        cusView.start(new Stage(),accData);
 
         //RemoveProductNotifier removeProductNotifier = new RemoveProductNotifier();
         //removeProductNotifier.cusView = cusView;

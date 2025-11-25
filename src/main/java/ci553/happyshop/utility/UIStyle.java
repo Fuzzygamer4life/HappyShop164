@@ -113,5 +113,7 @@ public record UIStyle() {
 
     public static final String alertContentUserActionStyle = "-fx-font-size: 14px;" +
             "-fx-font-weight: normal; -fx-text-fill: green;";
-
+    public static final String redTextStyle = "-fx-font-weight: bold; " +
+            "-fx-font-size: 14px; " +
+            "-fx-text-fill: red; " ;
 }
