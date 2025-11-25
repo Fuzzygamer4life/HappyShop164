@@ -28,15 +28,6 @@ public class loginView {
     public void start(Stage window) {
         thisWindow = window;
         makeLoginPage("");
-//        hbRoot = new HBox(10, loginPage); //initialize to show trolleyPage
-//        hbRoot.setAlignment(Pos.CENTER);
-//        hbRoot.setStyle(UIStyle.rootStyle);
-//
-//        Scene scene = new Scene(hbRoot, WIDTH, HEIGHT);
-//        window.setScene(scene);
-//        window.setTitle("🛒 HappyShop Sign In Client");
-
-        //WinPosManager.registerWindow(thisWindow, WIDTH, HEIGHT); //calculate position x and y for this window
         thisWindow.show();
     }
 
