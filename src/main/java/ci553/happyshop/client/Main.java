@@ -42,10 +42,16 @@ public class Main extends Application {
     //starts the system
     @Override
     public void start(Stage window) throws IOException {
-        startCustomerClient();
-        startPickerClient();
-        startOrderTracker();
 
+        Boolean isCustomer = true;
+        if (isCustomer)
+        {
+            startCustomerClient();
+            startOrderTracker();
+        }
+        else{
+            startPickerClient();
+        }
 //        startCustomerClient();
 //        startPickerClient();
 //        startOrderTracker();
@@ -55,7 +61,10 @@ public class Main extends Application {
         initializeOrderMap();
 
         //startWarehouseClient();
-        startWarehouseClient();
+        if (!isCustomer)
+        {
+            startWarehouseClient();
+        }
 
         startEmergencyExit();
     }
@@ -70,16 +79,17 @@ public class Main extends Application {
      * and is triggered by the Customer Model when needed.
      */
     private void startCustomerClient(){
+        int funds = 26899;
         CustomerView cusView = new CustomerView();
         CustomerController cusController = new CustomerController();
-        CustomerModel cusModel = new CustomerModel();
+        CustomerModel cusModel = new CustomerModel(CustomerModel.NOSORT,funds);
         DatabaseRW databaseRW = DatabaseRWFactory.createDatabaseRW();
 
         cusView.cusController = cusController;
         cusController.cusModel = cusModel;
         cusModel.cusView = cusView;
         cusModel.databaseRW = databaseRW;
-        cusView.start(new Stage());
+        cusView.start(new Stage(),"Belkan",funds);
 
         //RemoveProductNotifier removeProductNotifier = new RemoveProductNotifier();
         //removeProductNotifier.cusView = cusView;

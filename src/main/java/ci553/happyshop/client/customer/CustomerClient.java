@@ -28,14 +28,14 @@ public class CustomerClient extends Application {
     public void start(Stage window) {
         CustomerView cusView = new CustomerView();
         CustomerController cusController = new CustomerController();
-        CustomerModel cusModel = new CustomerModel();
+        CustomerModel cusModel = new CustomerModel(CustomerModel.NOSORT,1000);
         DatabaseRW databaseRW = DatabaseRWFactory.createDatabaseRW();
 
         cusView.cusController = cusController;
         cusController.cusModel = cusModel;
         cusModel.cusView = cusView;
         cusModel.databaseRW = databaseRW;
-        cusView.start(window);
+        cusView.start(window,"Belkan",10000);
 
         //RemoveProductNotifier removeProductNotifier = new RemoveProductNotifier();
         //removeProductNotifier.cusView = cusView;

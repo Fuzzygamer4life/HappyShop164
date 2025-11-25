@@ -49,8 +49,7 @@ public class CustomerView  {
     private VBox vbTrolleyPage;  //vbTrolleyPage and vbReceiptPage will swap with each other when need
     private VBox vbReceiptPage;
 
-    TextField tfId; //for user input on the search page. Made accessible so it can be accessed or modified by CustomerModel
-    TextField tfName; //for user input on the search page. Made accessible so it can be accessed by CustomerModel
+    Label errorText;
 
     //four controllers needs updating when program going on
     private ImageView ivProduct; //image area in searchPage
@@ -62,8 +61,8 @@ public class CustomerView  {
     // (e.g., positioning the removeProductNotifier when needed).
     private Stage viewWindow;
 
-    public void start(Stage window) {
-        VBox vbSearchPage = createSearchPage();
+    public void start(Stage window,String userName,int funds) {
+        VBox vbSearchPage = createSearchPage(userName,funds);
         vbTrolleyPage = CreateTrolleyPage();
         vbReceiptPage = createReceiptPage();
 
@@ -93,7 +92,44 @@ public class CustomerView  {
     ObservableList<Product> obeProductList; //observable product list
     ListView<Product> obrLvProducts; //A ListView observes the product list
 
-    private VBox createSearchPage() {
+    String getFundValue(int funds)
+    {
+        String fundString = funds + "";
+
+        switch (fundString.length())
+        {
+            case 1:
+            {
+                fundString = "0.0" + fundString;
+                break;
+            }
+            case 2:
+            {
+                fundString = "0." + fundString;
+                break;
+            }
+            default://1099#
+            {
+                fundString = fundString.substring(0,fundString.length() - 2) + "." + fundString.substring(fundString.length() - 2);
+                break;
+            }
+        }
+        return fundString;
+    }
+    Label userFunds;
+    private VBox createSearchPage(String userName,int funds) {
+
+        Label userTitle = new Label("User: " + userName);
+        userFunds = new Label("Funds: £" + getFundValue(funds));
+        userTitle.setStyle(UIStyle.labelStyle);
+        userFunds.setStyle(UIStyle.labelStyle);
+        HBox userInfo = new HBox(10, userTitle, userFunds);
+        errorText = new Label("");
+        //todo make error text red errorText.setStyle();
+        errorText.setVisible(false);
+        HBox errorBox = new HBox(10, errorText);
+
+
         //page being changed
         Label laPageTitle = new Label("Search by Product ID/Name");
         laPageTitle.setStyle(UIStyle.labelTitleStyle);
@@ -161,7 +197,7 @@ public class CustomerView  {
 
         VBox vbSearchResult = new VBox(5,hbLaBtns, obrLvProducts);
 
-        VBox vbSearchPage = new VBox(15, laPageTitle, hbId, vbSearchResult);
+        VBox vbSearchPage = new VBox(15,userInfo, errorBox, laPageTitle, hbId, vbSearchResult);
         vbSearchPage.setPrefWidth(COLUMN_WIDTH);
 
         vbSearchPage.setStyle("-fx-padding: 15px;");
@@ -235,22 +271,26 @@ public class CustomerView  {
         }
     }
 
-    public void update(String trolley, String receipt) {
-
+    public void update(String trolley, String receipt,int funds) {
+        userFunds.setText("Funds: £" + getFundValue(funds));
         taTrolley.setText(trolley);
         if (!receipt.equals("")) {
             showTrolleyOrReceiptPage(vbReceiptPage);
             taReceipt.setText(receipt);
         }
     }
-    public void update(String trolley, String receipt, ArrayList<Product> prodList) {
+    public void update(String trolley, String receipt, ArrayList<Product> prodList,int funds) {
 
         taTrolley.setText(trolley);
         if (!receipt.equals("")) {
             showTrolleyOrReceiptPage(vbReceiptPage);
             taReceipt.setText(receipt);
         }
-
+        if (!Objects.equals(errorText.getText(), ""))
+        {
+            errorText.setVisible(true);
+        }
+        userFunds.setText("Funds: £" + getFundValue(funds));
         int proCounter = prodList.size();
         System.out.println("products found from search : " + proCounter);
         searchResult.setText(proCounter + " products found");

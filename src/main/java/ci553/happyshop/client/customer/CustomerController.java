@@ -37,6 +37,8 @@ public class CustomerController {
             case "OK & Close":
                 cusModel.closeReceipt();
                 break;
+            case "Cancel":
+                cusModel.cancel();
             default:
                 System.out.println("Invalid action : " + action);
                 break;
