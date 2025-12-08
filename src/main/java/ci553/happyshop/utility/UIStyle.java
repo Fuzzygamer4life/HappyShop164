@@ -95,6 +95,7 @@ public record UIStyle() {
     public static final String redFillBtnStyle ="-fx-background-color: red; " +
             "-fx-text-fill: white; -fx-font-size: 14px; ";
 
+
     public static final String grayFillBtnStyle = "-fx-background-color: gray; " +
             "-fx-text-fill: white; -fx-font-size: 14px; ";
 

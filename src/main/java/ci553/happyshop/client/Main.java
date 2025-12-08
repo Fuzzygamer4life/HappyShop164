@@ -3,7 +3,8 @@ package ci553.happyshop.client;
 import ci553.happyshop.client.customer.*;
 
 import ci553.happyshop.client.emergency.EmergencyExit;
-import ci553.happyshop.client.hub.hubView;
+import ci553.happyshop.client.hub.settingsModel;
+import ci553.happyshop.client.hub.settingsView;
 import ci553.happyshop.client.orderTracker.OrderTracker;
 import ci553.happyshop.client.picker.PickerController;
 import ci553.happyshop.client.picker.PickerModel;
@@ -57,14 +58,20 @@ public class Main extends Application {
     }
     public void openMainWindows(userData currentAccount)
     {
-        Boolean isCustomer = true;
+        Boolean isCustomer = !currentAccount.getUserName().equals("AdminAccount");
         if (isCustomer)
         {
             startCustomerClient(currentAccount);
             startOrderTracker();
+
+
+            settingsView settingsWindow = new settingsView();
+            settingsModel model = new settingsModel(currentAccount, settingsWindow);
+
         }
         else{
             startPickerClient();
+            startWarehouseClient();
         }
 //        startCustomerClient();
 //        startPickerClient();
@@ -75,10 +82,10 @@ public class Main extends Application {
         initializeOrderMap();
 
         //startWarehouseClient();
-        if (!isCustomer)
-        {
-            startWarehouseClient();
-        }
+//        if (!isCustomer)
+//        {
+//            startWarehouseClient();
+//        }
 
         startEmergencyExit();
     }
@@ -86,8 +93,6 @@ public class Main extends Application {
     @Override
     public void start(Stage window) throws IOException {
         startLogin();
-        hubView hubTest = new hubView();
-        hubTest.start(new Stage());
     }
 
     /** The customer GUI -search prodduct, add to trolley, cancel/submit trolley, view receipt

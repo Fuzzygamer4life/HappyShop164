@@ -5,7 +5,7 @@ public class userData {
     String passWord;
     double accMoney = 0;
     String sortType = "Unknown";
-    final static int maxMoney = 100000;
+    final public static int maxMoney = 100000;
     //                 this is 1000.00
 
     public userData(String name,String pass)
@@ -33,6 +33,9 @@ public class userData {
     public String getSortType() {
         return sortType;
     }
+    public void changeSortType(String newSortType) {
+        sortType = newSortType;
+    }
 
     public String getUserName()
     {
@@ -43,10 +46,15 @@ public class userData {
         return accMoney;
     }
 
-    public String userToData()
+    public String userToData(boolean propper)
     {
-        String res = userName + "," + passWord + "," + accMoney + "," + sortType;
-        return res;
+        if (true)
+        {
+            return userName + "," + passWord + "," + ((int)(accMoney*100)) + "," + sortType;
+        }
+        else{
+            return userName + "," + passWord + "," + accMoney + "," + sortType;
+        }
     }
 
     public static userData stringToUser(String userString)
@@ -88,5 +96,9 @@ public class userData {
             }
         }
         return null;
+    }
+    public void saveData()
+    {
+        loginModel.updateUser(this);
     }
 }

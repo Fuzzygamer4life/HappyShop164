@@ -18,6 +18,7 @@ public class loginView {
 
      static String loginBut1 = "Sign in";
      static String loginBut2 = "Register";
+     String errorText;
      boolean signInMode = true;
     private HBox hbRoot;
     public Stage thisWindow;
@@ -112,7 +113,7 @@ public class loginView {
                 if (!logMod.takeInput(true))
                 {
                     invalidCounter++;
-                    makeLoginPage("Invalid login Attempt " + (invalidCounter > 1 ? "("+invalidCounter+")" : ""));
+                    makeLoginPage("Invalid login attempt" + (invalidCounter > 1 ? "("+invalidCounter+")" : ""));
                 }
                 //returns false if login failed
             }
@@ -127,7 +128,7 @@ public class loginView {
                 else
                 {
                     invalidCounter++;
-                    makeRegPage("Invalid Username Attempt " + (invalidCounter > 1 ? "("+invalidCounter+")" : ""));
+                    makeRegPage(errorText + (invalidCounter > 1 ? "("+invalidCounter+")" : ""));
                 }
                 //returns true when redgister has been made
             }

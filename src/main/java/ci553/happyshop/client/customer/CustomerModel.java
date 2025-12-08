@@ -38,9 +38,9 @@ public class CustomerModel {
     private String displayTaReceipt = "";// Text area content showing receipt after checkout (Receipt Page)
 
 
-    public final static String NOSORT = "sort_none";
-    public final static String IDSORT = "sort_id";
-    public final static String ALPHASORT = "sort_alpha";
+    public final static String NOSORT = "Unknown";
+    public final static String IDSORT = "ID_Sort";
+    public final static String ALPHASORT = "Name_Sort";
 
     userData currentAccount;
     String currentSortType = "";

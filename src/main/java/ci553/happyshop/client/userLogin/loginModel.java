@@ -3,6 +3,7 @@ package ci553.happyshop.client.userLogin;
 import ci553.happyshop.client.Main;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -28,7 +29,7 @@ public class loginModel {
 
     public void addUser(userData userInfo)
     {
-        String data = userInfo.userToData();
+        String data = userInfo.userToData(false);
         try{
             File mainFile = new File("src/main/resources/UserData/CustData.txt");
             FileWriter textFile = new FileWriter(mainFile,true);
@@ -41,6 +42,48 @@ public class loginModel {
         }
     }
 
+    static void updateUser(userData userInfo)
+    {
+        String data = userInfo.userToData(true);
+        ArrayList<String> lines = new ArrayList<>();
+        try{
+            File mainFile = new File("src/main/resources/UserData/CustData.txt");
+
+            Scanner textFile = new Scanner(mainFile);
+
+            while (textFile.hasNextLine())
+            {
+                String currentLine = textFile.nextLine();
+                String[] currentData = splitData(currentLine);
+
+                if (currentData != null)
+                {
+                    if ((Objects.equals(userInfo.userName, currentData[0])))
+                    {
+                        lines.add(data);
+                    }
+                    else{
+                        lines.add(currentLine);
+                    }
+                }
+            }
+            textFile.close();
+
+
+            FileWriter writeFile = new FileWriter(mainFile,false);
+            for (String line : lines)
+            {
+                writeFile.write(line);
+                writeFile.write("\n");
+            }
+            writeFile.close();
+        }
+        catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public loginModel(Main mainProgram)
     {
@@ -59,6 +102,8 @@ public class loginModel {
         String user = logView.nameInput.getText();
         String pass = logView.passInput.getText();
         System.out.println("Taking Input : " + (signIn ? "SignIn" : "RedgIn"));
+        System.out.println(user);
+        System.out.println(pass);
         if (signIn)
         {
             String searchRes = searchData(user,pass);
@@ -71,20 +116,73 @@ public class loginModel {
             return false;
         }
         else{
-            if (!hasUsername(user,pass))
+            if (!hasUsername(user))
             {
                 System.out.println("Valid username");
+
+                String passwordResult = isValidPassword(pass);
+                if (passwordResult != null)
+                {
+                    logView.errorText = passwordResult;
+                    return false;
+                }
+
                 addUser(new userData(user,pass));
                 return true;
             }
+            logView.errorText = "Username cannot be blank / taken";
             System.out.println("Invalid username");
             return false;
         }
     }
 
-    boolean hasUsername(String userName,String pass)
+    public String isValidPassword(String password)
     {
-        if (pass.isBlank() || userName.isBlank() || userName.contains(","))
+        if (password.length() < 6)
+        {
+            return "password must contain >6 characters";
+        }
+        else if (password.isBlank())
+        {
+            return "password cannot be blank";
+        }
+        boolean upperCheck = false;
+        boolean lowerCheck = false;
+        boolean numcheck = false;
+        for (char ch : password.toCharArray())
+        {
+            if (ch >= 'A' && ch <= 'Z')
+            {
+                upperCheck = true;
+            }
+            else if (ch >= 'a' && ch <= 'z')
+            {
+                lowerCheck = true;
+            }
+            else if (ch >= '0' && ch <= '9')
+            {
+                numcheck = true;
+            }
+
+        }
+        if (!numcheck)
+        {
+            return "Password must contain a digit";
+        }
+        if (!upperCheck)
+        {
+            return "Password needs a upper case letter";
+        }
+        if (!lowerCheck)
+        {
+            return "Password needs a lower case letter";
+        }
+        return null;
+    }
+
+    static boolean hasUsername(String userName)
+    {
+        if (userName.isBlank() || userName.contains(","))
         {
             System.out.println("Attempted to login with : Blank Username/Password");
             return true;
@@ -103,6 +201,7 @@ public class loginModel {
                 {
                     if ((Objects.equals(userName, currentData[0])))
                     {
+                        textFile.close();
                         return true;
                     }
                 }
@@ -115,7 +214,7 @@ public class loginModel {
         return false;
     }
 
-    String[] splitData(String userString)
+    static String[] splitData(String userString)
     {
         if (userString == null)
         {
