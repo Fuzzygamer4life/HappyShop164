@@ -1,5 +1,6 @@
 package ci553.happyshop.client.picker;
 
+import ci553.happyshop.client.warehouse.WarehouseView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -23,7 +24,7 @@ public class PickerClient extends Application {
      */
     @Override
     public void start(Stage window) {
-        PickerModel pickerModel = new PickerModel();
+        PickerModel pickerModel = new PickerModel(new WarehouseView(),null);
         PickerView pickerView = new PickerView();
         PickerController pickerController = new PickerController();
 

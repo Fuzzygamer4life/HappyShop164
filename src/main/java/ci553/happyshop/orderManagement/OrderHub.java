@@ -59,8 +59,8 @@ public class OrderHub  {
      *   but collected orders are shown for a limited time (10 seconds).
      * - PickerModels will be notified only of orders in the "ordered" or "progressing" states, filtering out collected orders.
      */
-    private ArrayList<OrderTracker> orderTrackerList = new ArrayList<>();
-    private ArrayList<PickerModel> pickerModelList = new ArrayList<>();
+    public ArrayList<OrderTracker> orderTrackerList = new ArrayList<>();
+    public ArrayList<PickerModel> pickerModelList = new ArrayList<>();
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 

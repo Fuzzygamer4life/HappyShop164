@@ -40,15 +40,30 @@ public final class WinPosManager {
         throw new UnsupportedOperationException("final_static class does not have object");
     }
 
-    public static void registerWindow(Stage stage, double width, double height) {
+    public static void resetData()
+    {
+        occupiedHeight = 0;
+        occupiedWidth = 0;
+        x = BASE_X;
+        y = BASE_Y;
+    }
+
+    public static void registerWindow(Stage stage, double width, double height)
+    {
+        registerWindow(stage,width,height,true);
+    }
+
+    public static void registerWindow(Stage stage, double width, double height, boolean storePos) {
         // Case 1: Fits in current row and within screen height
-        if ((occupiedWidth + width < SCREEN_WIDTH - BASE_X) &&
-                (occupiedHeight + height < SCREEN_HEIGHT - BASE_Y)) {
+        if ((occupiedWidth + width < SCREEN_WIDTH - BASE_X) && (occupiedHeight + height < SCREEN_HEIGHT - BASE_Y)) {
             stage.setX(x);
             stage.setY(y);
 
-            occupiedWidth += width + GAP;
-            x += width + GAP;
+            if (storePos)
+            {
+                occupiedWidth += width + GAP;
+                x += width + GAP;
+            }
         }
 
         // Case 2: New row (horizontal overflow, but vertical space available)
@@ -61,9 +76,12 @@ public final class WinPosManager {
             stage.setX(x);
             stage.setY(y);
 
-            occupiedWidth += width + GAP;
-            x += width + GAP;
-            occupiedHeight += height + GAP;
+            if (storePos)
+            {
+                occupiedWidth += width + GAP;
+                x += width + GAP;
+                occupiedHeight += height + GAP;
+            }
         }
 
         // Case 3: No space — fallback to fixed position (bottom-right stack)

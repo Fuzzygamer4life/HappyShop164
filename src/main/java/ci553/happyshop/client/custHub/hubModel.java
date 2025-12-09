@@ -4,26 +4,32 @@ import ci553.happyshop.client.Main;
 import ci553.happyshop.client.customer.CustomerController;
 import ci553.happyshop.client.customer.CustomerModel;
 import ci553.happyshop.client.customer.CustomerView;
+import ci553.happyshop.client.orderTracker.OrderTracker;
 import ci553.happyshop.client.settings.settingsModel;
 import ci553.happyshop.client.settings.settingsView;
 import ci553.happyshop.client.userLogin.userData;
+import ci553.happyshop.orderManagement.OrderHub;
 import ci553.happyshop.storageAccess.DatabaseRW;
 import ci553.happyshop.storageAccess.DatabaseRWFactory;
+import ci553.happyshop.utility.WinPosManager;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class hubModel {
     userData currentUser;
     Main main;
 
+    OrderTracker mainTracker;
     hubView hubVisuals;
     CustomerView customerVisuals;
     settingsView settingsVisuals;
 
 
-    public hubModel(Main mainScript,userData user,hubView hubVisuals) {
+    public hubModel(Main mainScript, userData user, hubView hubVisuals, OrderTracker tracker) {
         main = mainScript;
         currentUser = user;
         this.hubVisuals = hubVisuals;
+        this.mainTracker = tracker;
         hubVisuals.hubControlls = new hubController(this);
     }
 
@@ -81,8 +87,13 @@ public class hubModel {
             settingsVisuals.thisWindow.close();
             settingsVisuals = null;
         }
-        hubVisuals.thisWindow.close();
+        mainTracker.thisWindow.close();
+        mainTracker = null;
 
+        OrderHub.getOrderHub().orderTrackerList.clear();
+
+        hubVisuals.thisWindow.close();
+        WinPosManager.resetData();
         main.startLogin(false);
     }
 }

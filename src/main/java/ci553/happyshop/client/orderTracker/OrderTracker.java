@@ -27,6 +27,7 @@ public class OrderTracker {
     // TreeMap (orderID,state) holding order IDs and their corresponding states.
     private static final TreeMap<Integer, OrderState> ordersMap = new TreeMap<>();
     private final TextArea taDisplay; //area to show all orderId and their state on the GUI
+    public Stage thisWindow;
 
      //Constructor initializes the UI, a title Label, and a TextArea for displaying the order details.
     public OrderTracker() {
@@ -42,13 +43,13 @@ public class OrderTracker {
         vbox.setStyle(UIStyle. rootStyleGray);
 
         Scene scene = new Scene(vbox, WIDTH, HEIGHT);
-        Stage window = new Stage();
-        window.setScene(scene);
-        window.setTitle("🛒Order Tracker");
+        thisWindow = new Stage();
+        thisWindow.setScene(scene);
+        thisWindow.setTitle("🛒Order Tracker");
 
         // Registers the window's position with WinPosManager.
-        WinPosManager.registerWindow(window,WIDTH,HEIGHT); //calculate position x and y for this window
-        window.show();
+        WinPosManager.registerWindow(thisWindow,WIDTH,HEIGHT); //calculate position x and y for this window
+        thisWindow.show();
     }
 
     /**

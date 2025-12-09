@@ -68,7 +68,7 @@ public class WarehouseView  {
     private final int COLUMN_WIDTH = WIDTH / 2 - 10;
 
     public WarehouseController controller;
-    private Stage viewWindow;
+    public Stage viewWindow;
     /** A reference to the main window that is used to get its bounds (position and size).
      * This allows us to position other windows (like the History window or alert) relative to the Warehouse window.
      * It helps in keeping the UI layout consistent by placing new windows near the Warehouse window.

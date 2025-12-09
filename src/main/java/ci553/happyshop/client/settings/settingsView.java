@@ -1,6 +1,7 @@
 package ci553.happyshop.client.settings;
 
 import ci553.happyshop.utility.UIStyle;
+import ci553.happyshop.utility.WinPosManager;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,8 +16,8 @@ import javafx.stage.Stage;
 
 public class settingsView {
 
-    int HEIGHT = 500;
-    int WIDTH = 750;
+    int HEIGHT = 300;
+    int WIDTH = 400;
 
     settingsController controller;
     public Stage thisWindow;
@@ -97,6 +98,7 @@ public class settingsView {
 
         Scene scene = new Scene(hbRoot, WIDTH, HEIGHT);
         thisWindow.setScene(scene);
+        WinPosManager.registerWindow(thisWindow,WIDTH,HEIGHT,false); //calculate position x and y for this window
         thisWindow.setTitle("🛒 HappyShop Sign in Client");
     }
 

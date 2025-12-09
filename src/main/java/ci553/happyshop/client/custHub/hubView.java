@@ -1,6 +1,7 @@
 package ci553.happyshop.client.custHub;
 
 import ci553.happyshop.utility.UIStyle;
+import ci553.happyshop.utility.WinPosManager;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -66,6 +67,7 @@ public class hubView {
 
         Scene scene = new Scene(hbRoot, WIDTH, HEIGHT);
         thisWindow.setScene(scene);
+        WinPosManager.registerWindow(thisWindow,WIDTH,HEIGHT,true);
         thisWindow.setTitle("🛒 HappyShop Sign in Client");
     }
 

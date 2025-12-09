@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Tue Dec 09 03:23:36 GMT 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance a816c00e-019b-0122-cbc9-00000af24338 
-on database directory D:\Java Stuff\HappyShop164\happyShopDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1e80bfe8 
-Loaded from file:/C:/Users/zayne/.m2/repository/org/apache/derby/derby/10.16.1.1/derby-10.16.1.1.jar
-java.vendor=Eclipse Adoptium
-java.runtime.version=21.0.9+10-LTS
-user.dir=D:\Java Stuff\HappyShop164
+Tue Dec 09 10:08:47 GMT 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance a816c00e-019b-0295-bfe1-00000d0ccf78 
+on database directory C:\Users\zg164\IdeaProjects\HappyShop164\happyShopDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1e80bfe8 
+Loaded from file:/C:/Users/zg164/.m2/repository/org/apache/derby/derby/10.16.1.1/derby-10.16.1.1.jar
+java.vendor=Oracle Corporation
+java.runtime.version=21.0.2+13-58
+user.dir=C:\Users\zg164\IdeaProjects\HappyShop164
 os.name=Windows 11
 os.arch=amd64
 os.version=10.0

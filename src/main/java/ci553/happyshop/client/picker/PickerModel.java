@@ -1,7 +1,10 @@
 package ci553.happyshop.client.picker;
 
+import ci553.happyshop.client.Main;
+import ci553.happyshop.client.warehouse.WarehouseView;
 import ci553.happyshop.orderManagement.OrderHub;
 import ci553.happyshop.orderManagement.OrderState;
+import ci553.happyshop.utility.WinPosManager;
 
 import java.io.IOException;
 import java.util.Map;
@@ -72,6 +75,30 @@ public class PickerModel {
                 return; // Exit after handling one order
             }
         }
+    }
+
+    WarehouseView wareView;
+    Main mainScript;
+
+    public PickerModel(WarehouseView wareView,Main mainScript)
+    {
+        this.mainScript = mainScript;
+        this.wareView = wareView;
+    }
+
+    public void logOut()
+    {
+        wareView.viewWindow.close();
+        wareView = null;
+
+        pickerView.myWindow.close();
+        pickerView = null;
+
+        OrderHub.getOrderHub().pickerModelList.clear();
+
+        WinPosManager.resetData();
+        mainScript.startLogin(false);
+
     }
 
     // Lock an order

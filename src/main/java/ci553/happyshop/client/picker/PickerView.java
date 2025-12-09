@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -42,17 +43,20 @@ public class PickerView  {
        // Label used as the title for the Order Detail section.
        // Reminds the picker not to close the window if the order hasn't been collected by the customer.
 
+    public Stage myWindow;
+
     public void start(Stage window) {
         vbOrderMapRoot = createOrderMapRoot();
         vbOrderDetailRoot = createOrderDetailRoot();
         scene = new Scene(vbOrderMapRoot, WIDTH, HEIGHT);
-        window.setScene(scene);
-        window.setTitle("🛒 HappyShop Order Picker");
-        WinPosManager.registerWindow(window,WIDTH,HEIGHT); //calculate position x and y for this window
-        window.show();
+        myWindow = window;
+        myWindow.setScene(scene);
+        myWindow.setTitle("🛒 HappyShop Order Picker");
+        WinPosManager.registerWindow(myWindow,WIDTH,HEIGHT); //calculate position x and y for this window
+        myWindow.show();
 
         // Set the window close request to prevent closing if the order is not collected
-        window.setOnCloseRequest(event -> {
+        myWindow.setOnCloseRequest(event -> {
             if (!taOrderDetail.getText().equals("")) {
                 event.consume(); // Prevent window from closing
                 laDetailRootTitle.setText("Pls complete the order before closing.");
@@ -72,7 +76,13 @@ public class PickerView  {
         btnProgressing.setOnAction(this::buttonClicked);
         btnProgressing.setStyle(UIStyle.buttonStyle);
 
-        VBox vbOrdersListRoot = new VBox(15, laOrderMapRootTitle, taOrderMap, btnProgressing);
+        Button lgOutButton = new Button("Log Out");
+        lgOutButton.setOnAction(this::buttonClicked);
+        lgOutButton.setStyle(UIStyle.buttonStyle);
+
+        HBox mainButons = new HBox(10,btnProgressing,lgOutButton);
+
+        VBox vbOrdersListRoot = new VBox(15, laOrderMapRootTitle, taOrderMap, mainButons);
         vbOrdersListRoot.setAlignment(Pos.TOP_CENTER);
         vbOrdersListRoot.setStyle(UIStyle.rootStyleYellow);
 
@@ -92,7 +102,13 @@ public class PickerView  {
         btnCollected.setOnAction(this::buttonClicked);
         btnCollected.setStyle(UIStyle.buttonStyle);
 
-        VBox vbOrderDetailsRoot = new VBox(15, laDetailRootTitle, taOrderDetail, btnCollected);
+        Button lgOutButton = new Button("Log Out");
+        lgOutButton.setOnAction(this::buttonClicked);
+        lgOutButton.setStyle(UIStyle.buttonStyle);
+
+        HBox mainButons = new HBox(10,btnCollected,lgOutButton);
+
+        VBox vbOrderDetailsRoot = new VBox(15, laDetailRootTitle, taOrderDetail, mainButons);
         vbOrderDetailsRoot.setAlignment(Pos.TOP_CENTER);
         vbOrderDetailsRoot.setStyle(UIStyle.rootStyleBlue);
 
@@ -109,7 +125,12 @@ public class PickerView  {
                     scene.setRoot(vbOrderDetailRoot); // switch to OrderDetailRoot
                     pickerController.doProgressing();
                     break;
-
+                case "Log Out":
+                {
+                    System.out.println("Perform Log Out");
+                    pickerController.logOut();
+                    break;
+                }
                 case "Customer Collected":
                     pickerController.doCollected();
                     scene.setRoot(vbOrderMapRoot); // switch back to orderMapRoot

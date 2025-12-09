@@ -82,7 +82,10 @@ public class CustomerView  {
         Scene scene = new Scene(hbRoot, WIDTH, HEIGHT);
         window.setScene(scene);
         window.setTitle("🛒 HappyShop Customer Client");
-        WinPosManager.registerWindow(window,WIDTH,HEIGHT); //calculate position x and y for this window
+
+        System.out.println("Redgister custView");
+        WinPosManager.registerWindow(window,WIDTH,HEIGHT,false); //calculate position x and y for this window
+
         window.show();
         viewWindow=window;// Sets viewWindow to this window for future reference and management.
     }
