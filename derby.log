@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Mon Dec 08 15:53:54 GMT 2025:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance a816c00e-019a-feab-5b62-00000d26ad28 
+Tue Dec 09 03:23:36 GMT 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance a816c00e-019b-0122-cbc9-00000af24338 
 on database directory D:\Java Stuff\HappyShop164\happyShopDB with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@1e80bfe8 
 Loaded from file:/C:/Users/zayne/.m2/repository/org/apache/derby/derby/10.16.1.1/derby-10.16.1.1.jar
 java.vendor=Eclipse Adoptium

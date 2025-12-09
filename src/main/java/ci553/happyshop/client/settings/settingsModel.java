@@ -1,19 +1,9 @@
-package ci553.happyshop.client.hub;
+package ci553.happyshop.client.settings;
 
-import ci553.happyshop.catalogue.Order;
-import ci553.happyshop.catalogue.Product;
-import ci553.happyshop.client.customer.CustomerView;
+import ci553.happyshop.client.Main;
+import ci553.happyshop.client.custHub.hubModel;
 import ci553.happyshop.client.userLogin.userData;
-import ci553.happyshop.orderManagement.OrderHub;
-import ci553.happyshop.storageAccess.DatabaseRW;
-import ci553.happyshop.utility.ProductListFormatter;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -24,8 +14,10 @@ import java.util.Map;
 public class settingsModel {
     userData currentUser;
     settingsView setView;
-    public settingsModel(userData user,settingsView settingsView) {
+    hubModel hubScript;
+    public settingsModel(userData user, settingsView settingsView, hubModel hubScript) {
         currentUser = user;
+        this.hubScript = hubScript;
         this.setView = settingsView;
         setView.start(new Stage());
         updateView();
@@ -84,7 +76,8 @@ public class settingsModel {
     }
     public void logOut()
     {
-
+        System.out.println("Logging Out");
+        hubScript.logOut();
     }
 
     void updateView()

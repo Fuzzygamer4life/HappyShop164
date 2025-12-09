@@ -1,4 +1,4 @@
-package ci553.happyshop.client.hub;
+package ci553.happyshop.client.settings;
 
 import ci553.happyshop.utility.UIStyle;
 import javafx.event.ActionEvent;
@@ -79,6 +79,7 @@ public class settingsView {
 
 
         Button btnSearch = new Button("Log Out");
+        btnSearch.setOnAction(this::buttonClicked);
         btnSearch.setStyle(UIStyle.redFillBtnStyle);
 
         VBox result = new VBox(15,balTitle,hbLaBtns,sortBox,btnSearch);

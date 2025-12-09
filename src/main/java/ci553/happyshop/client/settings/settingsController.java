@@ -1,7 +1,4 @@
-package ci553.happyshop.client.hub;
-
-import java.io.IOException;
-import java.sql.SQLException;
+package ci553.happyshop.client.settings;
 
 public class settingsController {
     public settingsModel cusModel;
@@ -14,6 +11,9 @@ public class settingsController {
                 break;
             case "Remove":
                 cusModel.changeBalance(false);
+                break;
+            case "Log Out":
+                cusModel.logOut();
                 break;
             default:
                 System.out.println("Invalid action : " + action);

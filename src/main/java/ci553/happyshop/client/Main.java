@@ -1,10 +1,12 @@
 package ci553.happyshop.client;
 
+import ci553.happyshop.client.custHub.hubModel;
+import ci553.happyshop.client.custHub.hubView;
 import ci553.happyshop.client.customer.*;
 
 import ci553.happyshop.client.emergency.EmergencyExit;
-import ci553.happyshop.client.hub.settingsModel;
-import ci553.happyshop.client.hub.settingsView;
+import ci553.happyshop.client.settings.settingsModel;
+import ci553.happyshop.client.settings.settingsView;
 import ci553.happyshop.client.orderTracker.OrderTracker;
 import ci553.happyshop.client.picker.PickerController;
 import ci553.happyshop.client.picker.PickerModel;
@@ -47,8 +49,16 @@ public class Main extends Application {
     loginView logView;
     loginModel logModel;
 
-    private void startLogin()
+
+
+    public void startLogin(boolean isFirstLogin)
     {
+        if (isFirstLogin)
+        {
+            startOrderTracker();
+        }
+
+
         logModel = new loginModel(this);
         logView = new loginView();
         logModel.logView = logView;
@@ -61,12 +71,15 @@ public class Main extends Application {
         Boolean isCustomer = !currentAccount.getUserName().equals("AdminAccount");
         if (isCustomer)
         {
-            startCustomerClient(currentAccount);
-            startOrderTracker();
+            //settingsView settingsWindow = new settingsView();
+            //new settingsModel(currentAccount, settingsWindow,this);
+            //settings window
+            //customer window
+            //startCustomerClient(currentAccount);
 
-
-            settingsView settingsWindow = new settingsView();
-            settingsModel model = new settingsModel(currentAccount, settingsWindow);
+            hubView hubVis = new hubView();
+            hubVis.start(new Stage());
+            new hubModel(this,currentAccount,hubVis);
 
         }
         else{
@@ -92,7 +105,7 @@ public class Main extends Application {
     //starts the system
     @Override
     public void start(Stage window) throws IOException {
-        startLogin();
+        startLogin(true);
     }
 
     /** The customer GUI -search prodduct, add to trolley, cancel/submit trolley, view receipt
@@ -115,10 +128,6 @@ public class Main extends Application {
         cusModel.cusView = cusView;
         cusModel.databaseRW = databaseRW;
         cusView.start(new Stage(),accData);
-
-        //RemoveProductNotifier removeProductNotifier = new RemoveProductNotifier();
-        //removeProductNotifier.cusView = cusView;
-        //cusModel.removeProductNotifier = removeProductNotifier;
     }
 
     /** The picker GUI, - for staff to pack customer's order,

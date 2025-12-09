@@ -60,7 +60,7 @@ public class CustomerView  {
 
     // Holds a reference to this CustomerView window for future access and management
     // (e.g., positioning the removeProductNotifier when needed).
-    private Stage viewWindow;
+    public Stage viewWindow;
 
     public void start(Stage window,userData data) {
         VBox vbSearchPage = createSearchPage(data.getUserName(),data.getAccMoney());
